@@ -677,7 +677,7 @@ class Testimonial(models.Model):
         ordering = ["order", "-created_at"]
 
     def __str__(self):
-        return f"{self.author_name}: "{self.content[:60]}…""
+        return f"{self.author_name}: {self.content[:60]}…"
 
 
 class Partner(models.Model):
