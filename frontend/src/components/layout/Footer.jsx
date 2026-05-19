@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin } from 'lucide-react'
 
-// Social icons as inline SVGs (lucide-react v0.400+ removed these)
 const FacebookIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
@@ -40,12 +39,12 @@ const PROPERTY_LINKS = [
 ]
 
 const COMPANY_LINKS = [
-  { label: 'About Us',        to: '/about' },
-  { label: 'Our Agents',      to: '/agents' },
-  { label: 'Careers',         to: '/careers' },
-  { label: 'Press',           to: '/press' },
-  { label: 'Privacy Policy',  to: '/privacy' },
-  { label: 'Terms of Service',to: '/terms' },
+  { label: 'About Us',         to: '/about' },
+  { label: 'Our Agents',       to: '/agents' },
+  { label: 'Careers',          to: '/careers' },
+  { label: 'Press',            to: '/press' },
+  { label: 'Privacy Policy',   to: '/privacy' },
+  { label: 'Terms of Service', to: '/terms' },
 ]
 
 export default function Footer() {
@@ -68,15 +67,40 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <div style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '2rem',
-              fontWeight: 600,
-              color: 'var(--warm-white)',
-              marginBottom: '1.25rem',
-            }}>
-              Luxury<span style={{ color: 'var(--gold)' }}>Home</span>
-            </div>
+            {/* Logo image + name */}
+            <Link
+              to="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.65rem',
+                marginBottom: '1.25rem',
+                textDecoration: 'none',
+              }}
+            >
+              <img
+                src="/logo.png"
+                alt=""
+                aria-hidden="true"
+                style={{
+                  height: '60px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '1.9rem',
+                fontWeight: 600,
+                color: 'var(--warm-white)',
+                letterSpacing: '0.03em',
+                lineHeight: 1,
+              }}>
+                Luxury<span style={{ color: 'var(--gold)' }}>Home</span>
+              </span>
+            </Link>
+
             <p style={{
               fontSize: '0.85rem',
               lineHeight: 1.8,
@@ -205,7 +229,6 @@ export default function Footer() {
               ))}
             </div>
 
-            {/* WhatsApp CTA */}
             <a
               href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '+254700000000'}`}
               target="_blank"

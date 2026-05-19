@@ -22,20 +22,17 @@ export default function Navbar() {
   const location  = useLocation()
   const profileRef = useRef(null)
 
-  // Scroll listener
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
-  // Close drawer on route change
   useEffect(() => {
     setDrawerOpen(false)
     setProfileOpen(false)
   }, [location.pathname])
 
-  // Close profile dropdown on outside click
   useEffect(() => {
     const fn = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -46,7 +43,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', fn)
   }, [])
 
-  // Lock body scroll when drawer is open
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -70,9 +66,28 @@ export default function Navbar() {
         <div className="container">
           <div className="navbar-inner">
 
-            {/* Logo */}
-            <Link to="/" className="navbar-logo">
-              Luxury<span>Home</span>
+            {/* Logo — icon + text side by side */}
+            <Link
+              to="/"
+              className="navbar-logo"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', textDecoration: 'none' }}
+            >
+              <img
+                src="/logo.png"
+                alt=""
+                aria-hidden="true"
+                style={{ height: '40px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
+              />
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(1.2rem, 3vw, 1.7rem)',
+                fontWeight: 600,
+                letterSpacing: '0.03em',
+                color: 'var(--warm-white)',
+                lineHeight: 1,
+              }}>
+                Luxury<span style={{ color: 'var(--gold)' }}>Home</span>
+              </span>
             </Link>
 
             {/* Desktop Links */}
@@ -170,7 +185,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Hamburger — always visible on mobile */}
+              {/* Hamburger */}
               <button
                 onClick={() => setDrawerOpen(true)}
                 className="hamburger-btn"
@@ -206,10 +221,29 @@ export default function Navbar() {
       {/* ── Drawer Sidebar ────────────────────────────────── */}
       <aside className={`drawer ${drawerOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu">
 
-        {/* Drawer Header */}
+        {/* Drawer Header — icon + text */}
         <div className="drawer-header">
-          <Link to="/" className="drawer-logo" onClick={() => setDrawerOpen(false)}>
-            Luxury<span>Home</span>
+          <Link
+            to="/"
+            className="drawer-logo"
+            onClick={() => setDrawerOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+          >
+            <img
+              src="/logo.png"
+              alt=""
+              aria-hidden="true"
+              style={{ height: '34px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
+            />
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.35rem',
+              fontWeight: 600,
+              color: 'var(--warm-white)',
+              lineHeight: 1,
+            }}>
+              Luxury<span style={{ color: 'var(--gold)' }}>Home</span>
+            </span>
           </Link>
           <button
             className="drawer-close"
@@ -222,7 +256,6 @@ export default function Navbar() {
 
         {/* Drawer Nav Links */}
         <nav className="drawer-nav">
-          {/* Main links */}
           <Link to="/" className={`drawer-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)}>
             <Home size={17} /> Home
           </Link>
@@ -237,10 +270,8 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* Divider */}
           <div style={{ height: '1px', background: 'rgba(201,168,76,0.12)', margin: '1.25rem 0' }} />
 
-          {/* User section */}
           {user ? (
             <>
               <div style={{ padding: '0.75rem', background: 'var(--dark-3)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -307,7 +338,6 @@ export default function Navbar() {
         </div>
       </aside>
 
-      {/* Hide hamburger on desktop via CSS, hide desktop links on mobile */}
       <style>{`
         @media (min-width: 768px) {
           .hamburger-btn { display: none !important; }
