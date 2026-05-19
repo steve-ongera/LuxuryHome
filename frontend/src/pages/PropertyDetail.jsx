@@ -50,7 +50,7 @@ export default function PropertyDetail() {
     created_at, is_featured,
   } = property
 
-  const allImages = [featured_image, ...gallery_images].filter(Boolean)
+  const allImages = [featured_image, ...gallery_images.map(g => g?.image || g)].filter(Boolean)
 
   const formatPrice = (p) => {
     if (!p) return 'Price on request'
@@ -218,9 +218,12 @@ export default function PropertyDetail() {
                 <div className="gold-divider" />
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.6rem', marginTop: '1rem' }}>
                   {amenities.map((a) => (
-                    <div key={a} style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', fontSize: '0.85rem', color: 'var(--gray-mid)' }}>
+                    <div
+                      key={a.id ?? a.name ?? a}
+                      style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', fontSize: '0.85rem', color: 'var(--gray-mid)' }}
+                    >
                       <CheckCircle size={14} color="var(--gold)" />
-                      {a}
+                      {typeof a === 'object' ? a.name : a}
                     </div>
                   ))}
                 </div>
@@ -236,10 +239,11 @@ export default function PropertyDetail() {
                 display: 'flex',
                 gap: '1.25rem',
                 alignItems: 'center',
+                flexWrap: 'wrap',
               }}>
                 <img
                   src={agent.avatar || `https://i.pravatar.cc/60?img=${agent.id}`}
-                  alt={agent.name}
+                  alt={agent.full_name || agent.name}
                   style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--gold)' }}
                 />
                 <div>
@@ -267,10 +271,21 @@ export default function PropertyDetail() {
           <div style={{ position: 'sticky', top: '6rem' }}>
             {/* Action Buttons */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-              <button style={{ flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem' }}>
+              <button
+                style={{
+                  flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem',
+                }}
+              >
                 <Heart size={14} /> Save
               </button>
-              <button style={{ flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem' }}
+              <button
+                style={{
+                  flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem',
+                }}
                 onClick={() => navigator.share?.({ title, url: window.location.href })}
               >
                 <Share2 size={14} /> Share

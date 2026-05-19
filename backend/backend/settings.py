@@ -148,10 +148,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 12,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
-    ],
+    # Throttling disabled for development (requires Redis in production)
+    "DEFAULT_THROTTLE_CLASSES": [],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100/hour",
         "user": "1000/hour",
@@ -218,21 +216,16 @@ CELERY_TASK_SERIALIZER   = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE          = TIME_ZONE
 
-# ── Redis Cache ───────────────────────────────────────────
+# ── Cache (locmem for dev — swap for Redis in production) ─
 CACHES = {
     "default": {
-        "BACKEND":  "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL", default="redis://localhost:6379/1"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-        "TIMEOUT": 300,
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
 # ── Session ───────────────────────────────────────────────
-SESSION_ENGINE         = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS    = "default"
+SESSION_ENGINE      = "django.contrib.sessions.backends.db"
+SESSION_CACHE_ALIAS = "default"
 
 # ── Google OAuth ──────────────────────────────────────────
 GOOGLE_CLIENT_ID     = env("GOOGLE_CLIENT_ID",     default="")
@@ -304,3 +297,28 @@ LOGGING = {
 ADMIN_SITE_HEADER = "LuxuryHome Administration"
 ADMIN_SITE_TITLE  = "LuxuryHome Admin"
 ADMIN_INDEX_TITLE = "Platform Management"
+
+
+# ══════════════════════════════════════════════════════════
+# PRODUCTION OVERRIDES
+# When you're ready to deploy, set these in your .env:
+#   DEBUG=False
+#   REDIS_URL=redis://your-redis-host:6379/1
+#   CELERY_BROKER_URL=redis://your-redis-host:6379/0
+# Then replace CACHES with:
+#   CACHES = {
+#       "default": {
+#           "BACKEND":  "django_redis.cache.RedisCache",
+#           "LOCATION": env("REDIS_URL"),
+#           "OPTIONS":  {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+#           "TIMEOUT":  300,
+#       }
+#   }
+# And re-enable throttling in REST_FRAMEWORK:
+#   "DEFAULT_THROTTLE_CLASSES": [
+#       "rest_framework.throttling.AnonRateThrottle",
+#       "rest_framework.throttling.UserRateThrottle",
+#   ],
+# And switch sessions back to cache:
+#   SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# ══════════════════════════════════════════════════════════
