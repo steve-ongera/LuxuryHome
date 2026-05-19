@@ -50,10 +50,14 @@ function HotelCard({ hotel }) {
           </div>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
             {amenities.slice(0, 4).map((a) => {
-              const Icon = AMENITY_ICONS[a.toLowerCase()] || Wifi
+              const amenityName = typeof a === 'object' ? a.name : a
+              const Icon = AMENITY_ICONS[amenityName?.toLowerCase()] || Wifi
               return (
-                <span key={a} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.7rem', color: 'var(--gray-muted)', background: 'var(--dark-3)', padding: '0.2rem 0.5rem' }}>
-                  <Icon size={11} /> {a}
+                <span
+                  key={a.id ?? amenityName}
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.7rem', color: 'var(--gray-muted)', background: 'var(--dark-3)', padding: '0.2rem 0.5rem' }}
+                >
+                  <Icon size={11} /> {amenityName}
                 </span>
               )
             })}
@@ -140,14 +144,17 @@ export default function Hotels() {
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--gray-muted)', alignSelf: 'center' }}>Stars:</span>
               {[0, 3, 4, 5].map((s) => (
-                <button key={s} onClick={() => setStarFilter(s)}
+                <button
+                  key={s}
+                  onClick={() => setStarFilter(s)}
                   style={{
                     padding: '0.45rem 1rem', fontSize: '0.75rem',
                     background: starFilter === s ? 'var(--gold)' : 'var(--dark-3)',
                     color: starFilter === s ? 'var(--black)' : 'var(--gray-mid)',
                     border: '1px solid rgba(255,255,255,0.08)',
                     cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'var(--font-body)',
-                  }}>
+                  }}
+                >
                   {s === 0 ? 'All' : `${s}★`}
                 </button>
               ))}
