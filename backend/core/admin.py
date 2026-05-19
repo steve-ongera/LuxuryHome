@@ -34,7 +34,7 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name', 'phone')
     ordering = ('-date_joined',)
     readonly_fields = ('id', 'date_joined', 'updated_at', 'avatar_preview')
-    
+
     fieldsets = (
         ('Account Information', {
             'fields': ('id', 'email', 'password')
@@ -55,42 +55,45 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('email', 'first_name', 'last_name', 'password1', 'password2', 'role'),
         }),
     )
-    
+
     def full_name(self, obj):
         return obj.get_full_name()
     full_name.short_description = 'Full Name'
     full_name.admin_order_field = 'first_name'
-    
+
     def avatar_preview(self, obj):
         if obj.avatar:
-            return format_html('<img src="{}" width="50" height="50" style="border-radius: 50%;" />', obj.avatar.url)
+            return format_html(
+                '<img src="{}" width="50" height="50" style="border-radius: 50%;" />',
+                obj.avatar.url
+            )
         return "No Avatar"
     avatar_preview.short_description = 'Avatar Preview'
-    
+
     actions = ['mark_as_verified', 'mark_as_unverified', 'make_active', 'make_inactive']
-    
+
     def mark_as_verified(self, request, queryset):
         updated = queryset.update(is_verified=True)
         self.message_user(request, f'{updated} users marked as verified.')
     mark_as_verified.short_description = 'Mark selected users as verified'
-    
+
     def mark_as_unverified(self, request, queryset):
         updated = queryset.update(is_verified=False)
         self.message_user(request, f'{updated} users marked as unverified.')
     mark_as_unverified.short_description = 'Mark selected users as unverified'
-    
+
     def make_active(self, request, queryset):
         updated = queryset.update(is_active=True)
         self.message_user(request, f'{updated} users activated.')
     make_active.short_description = 'Activate selected users'
-    
+
     def make_inactive(self, request, queryset):
         updated = queryset.update(is_active=False)
         self.message_user(request, f'{updated} users deactivated.')
@@ -103,7 +106,7 @@ class EmailVerificationTokenAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     search_fields = ('user__email', 'token')
     readonly_fields = ('token', 'created_at')
-    
+
     def is_expired(self, obj):
         return obj.is_expired()
     is_expired.boolean = True
@@ -116,7 +119,7 @@ class PasswordResetTokenAdmin(admin.ModelAdmin):
     list_filter = ('used', 'created_at')
     search_fields = ('user__email', 'token')
     readonly_fields = ('token', 'created_at')
-    
+
     def is_expired(self, obj):
         return obj.is_expired()
     is_expired.boolean = True
@@ -132,21 +135,23 @@ class AmenityAdmin(admin.ModelAdmin):
     list_display = ('name', 'icon', 'property_count', 'hotel_count')
     search_fields = ('name',)
     ordering = ('name',)
-    
+
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         return queryset.annotate(
-            property_count=Count('properties'),
-            hotel_count=Count('hotels')
+            property_count=Count('properties', distinct=True),
+            hotel_count=Count('hotels', distinct=True)
         )
-    
+
     def property_count(self, obj):
         return obj.property_count
     property_count.short_description = 'Properties'
-    
+    property_count.admin_order_field = 'property_count'
+
     def hotel_count(self, obj):
         return obj.hotel_count
     hotel_count.short_description = 'Hotels'
+    hotel_count.admin_order_field = 'hotel_count'
 
 
 # ─────────────────────────────────────────────────────────────
@@ -158,10 +163,13 @@ class PropertyImageInline(admin.TabularInline):
     extra = 1
     fields = ('image', 'caption', 'order', 'image_preview')
     readonly_fields = ('image_preview',)
-    
+
     def image_preview(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;" />', obj.image.url)
+            return format_html(
+                '<img src="{}" width="100" height="75" style="object-fit: cover;" />',
+                obj.image.url
+            )
         return "No Image"
     image_preview.short_description = 'Preview'
 
@@ -173,13 +181,6 @@ class PropertyReviewInline(admin.TabularInline):
     readonly_fields = ('created_at',)
     can_delete = True
     show_change_link = True
-
-
-class PropertyAmenityInline(admin.TabularInline):
-    model = Property.amenities.through
-    extra = 1
-    verbose_name = 'Amenity'
-    verbose_name_plural = 'Amenities'
 
 
 # ─────────────────────────────────────────────────────────────
@@ -197,12 +198,15 @@ class PropertyAdmin(admin.ModelAdmin):
         'currency', 'city', 'created_at'
     )
     search_fields = ('title', 'slug', 'description', 'city', 'exact_location')
-    prepopulated_fields = {'slug': ('title',)}
+
+    # FIX: slug is auto-generated in model.save(), so it must be readonly only.
+    # Do NOT include it in prepopulated_fields — that conflicts with readonly_fields.
     readonly_fields = ('id', 'slug', 'view_count', 'created_at', 'updated_at', 'featured_image_preview')
+
     list_editable = ('is_featured', 'is_approved', 'is_active')
     list_per_page = 25
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Basic Information', {
             'fields': ('id', 'title', 'slug', 'property_type', 'status', 'description')
@@ -214,7 +218,7 @@ class PropertyAdmin(admin.ModelAdmin):
             'fields': ('country', 'county_state', 'city', 'exact_location', 'latitude', 'longitude')
         }),
         ('Specifications', {
-            'fields': ('bedrooms', 'bathrooms', 'size_sqft', 'size_acres', 'year_built', 
+            'fields': ('bedrooms', 'bathrooms', 'size_sqft', 'size_acres', 'year_built',
                       'floors', 'parking_spaces', 'is_furnished')
         }),
         ('Media & SEO', {
@@ -222,7 +226,7 @@ class PropertyAdmin(admin.ModelAdmin):
                       'seo_title', 'seo_description', 'seo_image')
         }),
         ('Relations', {
-            'fields': ('agent',)
+            'fields': ('agent', 'amenities')
         }),
         ('Flags', {
             'fields': ('is_featured', 'is_approved', 'is_active')
@@ -232,15 +236,18 @@ class PropertyAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     inlines = [PropertyImageInline, PropertyReviewInline]
-    
+
     def featured_image_preview(self, obj):
         if obj.featured_image:
-            return format_html('<img src="{}" width="200" height="150" style="object-fit: cover;" />', obj.featured_image.url)
+            return format_html(
+                '<img src="{}" width="200" height="150" style="object-fit: cover;" />',
+                obj.featured_image.url
+            )
         return "No Image"
     featured_image_preview.short_description = 'Featured Image Preview'
-    
+
     def price_display(self, obj):
         if obj.price_on_request:
             return 'Price on Request'
@@ -248,26 +255,26 @@ class PropertyAdmin(admin.ModelAdmin):
             return f'{obj.currency} {obj.price:,.0f}'
         return 'N/A'
     price_display.short_description = 'Price'
-    
+
     def agent_link(self, obj):
         if obj.agent:
             url = reverse('admin:core_user_change', args=[obj.agent.id])
             return format_html('<a href="{}">{}</a>', url, obj.agent.get_full_name())
         return '-'
     agent_link.short_description = 'Agent'
-    
+
     actions = ['approve_properties', 'feature_properties', 'unfeature_properties']
-    
+
     def approve_properties(self, request, queryset):
         updated = queryset.update(is_approved=True)
         self.message_user(request, f'{updated} properties approved.')
     approve_properties.short_description = 'Approve selected properties'
-    
+
     def feature_properties(self, request, queryset):
         updated = queryset.update(is_featured=True)
         self.message_user(request, f'{updated} properties marked as featured.')
     feature_properties.short_description = 'Mark as featured'
-    
+
     def unfeature_properties(self, request, queryset):
         updated = queryset.update(is_featured=False)
         self.message_user(request, f'{updated} properties unmarked as featured.')
@@ -281,10 +288,13 @@ class PropertyImageAdmin(admin.ModelAdmin):
     search_fields = ('property__title', 'caption')
     list_editable = ('order',)
     readonly_fields = ('image_preview',)
-    
+
     def image_preview(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;" />', obj.image.url)
+            return format_html(
+                '<img src="{}" width="100" height="75" style="object-fit: cover;" />',
+                obj.image.url
+            )
         return "No Image"
     image_preview.short_description = 'Preview'
 
@@ -295,7 +305,7 @@ class PropertyReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'created_at')
     search_fields = ('property__title', 'author__email', 'author__first_name', 'comment')
     readonly_fields = ('created_at',)
-    
+
     def comment_preview(self, obj):
         return obj.comment[:50] + '...' if len(obj.comment) > 50 else obj.comment
     comment_preview.short_description = 'Comment'
@@ -324,7 +334,7 @@ class QuoteRequestAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'created_at', 'updated_at')
     list_editable = ('status',)
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Inquiry Information', {
             'fields': ('id', 'property', 'hotel', 'inquiry_type', 'message')
@@ -340,36 +350,40 @@ class QuoteRequestAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def target(self, obj):
         if obj.property:
-            return format_html('<a href="{}">{}</a>', 
-                             reverse('admin:core_property_change', args=[obj.property.id]),
-                             obj.property.title)
+            return format_html(
+                '<a href="{}">{}</a>',
+                reverse('admin:core_property_change', args=[obj.property.id]),
+                obj.property.title
+            )
         elif obj.hotel:
-            return format_html('<a href="{}">{}</a>',
-                             reverse('admin:core_hotel_change', args=[obj.hotel.id]),
-                             obj.hotel.name)
+            return format_html(
+                '<a href="{}">{}</a>',
+                reverse('admin:core_hotel_change', args=[obj.hotel.id]),
+                obj.hotel.name
+            )
         return 'General Inquiry'
     target.short_description = 'Target'
-    
+
     def has_response(self, obj):
         return bool(obj.agent_response)
     has_response.boolean = True
     has_response.short_description = 'Has Response'
-    
+
     actions = ['mark_as_in_progress', 'mark_as_responded', 'mark_as_closed']
-    
+
     def mark_as_in_progress(self, request, queryset):
         updated = queryset.update(status='in_progress')
         self.message_user(request, f'{updated} inquiries marked as in progress.')
     mark_as_in_progress.short_description = 'Mark as In Progress'
-    
+
     def mark_as_responded(self, request, queryset):
         updated = queryset.update(status='responded')
         self.message_user(request, f'{updated} inquiries marked as responded.')
     mark_as_responded.short_description = 'Mark as Responded'
-    
+
     def mark_as_closed(self, request, queryset):
         updated = queryset.update(status='closed')
         self.message_user(request, f'{updated} inquiries closed.')
@@ -385,10 +399,13 @@ class HotelImageInline(admin.TabularInline):
     extra = 1
     fields = ('image', 'caption', 'order', 'image_preview')
     readonly_fields = ('image_preview',)
-    
+
     def image_preview(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;" />', obj.image.url)
+            return format_html(
+                '<img src="{}" width="100" height="75" style="object-fit: cover;" />',
+                obj.image.url
+            )
         return "No Image"
     image_preview.short_description = 'Preview'
 
@@ -400,13 +417,6 @@ class RoomTypeInline(admin.TabularInline):
     show_change_link = True
 
 
-class HotelAmenityInline(admin.TabularInline):
-    model = Hotel.amenities.through
-    extra = 1
-    verbose_name = 'Amenity'
-    verbose_name_plural = 'Amenities'
-
-
 @admin.register(Hotel)
 class HotelAdmin(admin.ModelAdmin):
     list_display = (
@@ -415,12 +425,15 @@ class HotelAdmin(admin.ModelAdmin):
     )
     list_filter = ('star_rating', 'is_featured', 'is_active', 'city', 'country')
     search_fields = ('name', 'slug', 'description', 'city')
-    prepopulated_fields = {'slug': ('name',)}
-    readonly_fields = ('id', 'created_at', 'updated_at', 'featured_image_preview')
+
+    # FIX: Same issue as Property — slug is readonly/auto-generated, cannot also be
+    # in prepopulated_fields. Removed prepopulated_fields entirely for Hotel too.
+    readonly_fields = ('id', 'slug', 'created_at', 'updated_at', 'featured_image_preview')
+
     list_editable = ('is_featured', 'is_active')
     list_per_page = 25
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Basic Information', {
             'fields': ('id', 'name', 'slug', 'description', 'star_rating')
@@ -432,11 +445,11 @@ class HotelAdmin(admin.ModelAdmin):
             'fields': ('price_per_night', 'currency', 'total_rooms')
         }),
         ('Media & SEO', {
-            'fields': ('featured_image', 'featured_image_preview', 'seo_title', 
+            'fields': ('featured_image', 'featured_image_preview', 'seo_title',
                       'seo_description', 'seo_image')
         }),
         ('Relations', {
-            'fields': ('owner',)
+            'fields': ('owner', 'amenities')
         }),
         ('Flags', {
             'fields': ('is_featured', 'is_active')
@@ -446,34 +459,37 @@ class HotelAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
-    inlines = [HotelImageInline, RoomTypeInline, HotelAmenityInline]
-    
+
+    inlines = [HotelImageInline, RoomTypeInline]
+
     def featured_image_preview(self, obj):
         if obj.featured_image:
-            return format_html('<img src="{}" width="200" height="150" style="object-fit: cover;" />', obj.featured_image.url)
+            return format_html(
+                '<img src="{}" width="200" height="150" style="object-fit: cover;" />',
+                obj.featured_image.url
+            )
         return "No Image"
     featured_image_preview.short_description = 'Featured Image Preview'
-    
+
     def star_rating_display(self, obj):
         stars = '★' * obj.star_rating + '☆' * (5 - obj.star_rating)
         return format_html('<span style="color: #FFD700;">{}</span>', stars)
     star_rating_display.short_description = 'Rating'
-    
+
     def owner_link(self, obj):
         if obj.owner:
             url = reverse('admin:core_user_change', args=[obj.owner.id])
             return format_html('<a href="{}">{}</a>', url, obj.owner.get_full_name())
         return '-'
     owner_link.short_description = 'Owner'
-    
+
     actions = ['feature_hotels', 'unfeature_hotels']
-    
+
     def feature_hotels(self, request, queryset):
         updated = queryset.update(is_featured=True)
         self.message_user(request, f'{updated} hotels marked as featured.')
     feature_hotels.short_description = 'Mark as featured'
-    
+
     def unfeature_hotels(self, request, queryset):
         updated = queryset.update(is_featured=False)
         self.message_user(request, f'{updated} hotels unmarked as featured.')
@@ -487,10 +503,13 @@ class HotelImageAdmin(admin.ModelAdmin):
     search_fields = ('hotel__name', 'caption')
     list_editable = ('order',)
     readonly_fields = ('image_preview',)
-    
+
     def image_preview(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="100" height="75" style="object-fit: cover;" />', obj.image.url)
+            return format_html(
+                '<img src="{}" width="100" height="75" style="object-fit: cover;" />',
+                obj.image.url
+            )
         return "No Image"
     image_preview.short_description = 'Preview'
 
@@ -501,8 +520,7 @@ class RoomTypeAdmin(admin.ModelAdmin):
     list_filter = ('is_available', 'hotel__city', 'hotel__star_rating')
     search_fields = ('name', 'description', 'hotel__name')
     list_editable = ('price_per_night', 'total_units', 'is_available')
-    readonly_fields = ('id',)
-    
+
     fieldsets = (
         ('Room Information', {
             'fields': ('hotel', 'name', 'description')
@@ -517,7 +535,7 @@ class RoomTypeAdmin(admin.ModelAdmin):
             'fields': ('image', 'amenities')
         }),
     )
-    
+
     def hotel_link(self, obj):
         url = reverse('admin:core_hotel_change', args=[obj.hotel.id])
         return format_html('<a href="{}">{}</a>', url, obj.hotel.name)
@@ -543,7 +561,7 @@ class HotelBookingAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'created_at', 'updated_at', 'nights')
     list_editable = ('status',)
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Guest Information', {
             'fields': ('guest_name', 'guest_email', 'guest_phone', 'user')
@@ -562,29 +580,33 @@ class HotelBookingAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def hotel_link(self, obj):
         url = reverse('admin:core_hotel_change', args=[obj.hotel.id])
         return format_html('<a href="{}">{}</a>', url, obj.hotel.name)
     hotel_link.short_description = 'Hotel'
-    
+
     def room_type_link(self, obj):
         url = reverse('admin:core_roomtype_change', args=[obj.room_type.id])
         return format_html('<a href="{}">{}</a>', url, obj.room_type.name)
     room_type_link.short_description = 'Room Type'
-    
+
+    def nights(self, obj):
+        return obj.nights
+    nights.short_description = 'Nights'
+
     actions = ['confirm_bookings', 'cancel_bookings', 'complete_bookings']
-    
+
     def confirm_bookings(self, request, queryset):
         updated = queryset.update(status='confirmed')
         self.message_user(request, f'{updated} bookings confirmed.')
     confirm_bookings.short_description = 'Confirm selected bookings'
-    
+
     def cancel_bookings(self, request, queryset):
         updated = queryset.update(status='cancelled')
         self.message_user(request, f'{updated} bookings cancelled.')
     cancel_bookings.short_description = 'Cancel selected bookings'
-    
+
     def complete_bookings(self, request, queryset):
         updated = queryset.update(status='completed')
         self.message_user(request, f'{updated} bookings marked as completed.')
@@ -597,7 +619,7 @@ class HotelReviewAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'created_at')
     search_fields = ('hotel__name', 'author__email', 'comment', 'title')
     readonly_fields = ('created_at',)
-    
+
     def comment_preview(self, obj):
         return obj.comment[:50] + '...' if len(obj.comment) > 50 else obj.comment
     comment_preview.short_description = 'Comment'
@@ -618,7 +640,7 @@ class AppointmentAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'created_at')
     list_editable = ('status',)
     date_hierarchy = 'scheduled_at'
-    
+
     fieldsets = (
         ('Client Information', {
             'fields': ('client_name', 'client_email', 'client_phone', 'user')
@@ -634,29 +656,29 @@ class AppointmentAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def property_link(self, obj):
         url = reverse('admin:core_property_change', args=[obj.property.id])
         return format_html('<a href="{}">{}</a>', url, obj.property.title)
     property_link.short_description = 'Property'
-    
+
     def agent_link(self, obj):
         url = reverse('admin:core_user_change', args=[obj.agent.id])
         return format_html('<a href="{}">{}</a>', url, obj.agent.get_full_name())
     agent_link.short_description = 'Agent'
-    
+
     actions = ['confirm_appointments', 'cancel_appointments', 'complete_appointments']
-    
+
     def confirm_appointments(self, request, queryset):
         updated = queryset.update(status='confirmed')
         self.message_user(request, f'{updated} appointments confirmed.')
     confirm_appointments.short_description = 'Confirm selected appointments'
-    
+
     def cancel_appointments(self, request, queryset):
         updated = queryset.update(status='cancelled')
         self.message_user(request, f'{updated} appointments cancelled.')
     cancel_appointments.short_description = 'Cancel selected appointments'
-    
+
     def complete_appointments(self, request, queryset):
         updated = queryset.update(status='completed')
         self.message_user(request, f'{updated} appointments marked as completed.')
@@ -675,14 +697,14 @@ class NotificationAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'created_at')
     list_editable = ('is_read',)
     date_hierarchy = 'created_at'
-    
+
     actions = ['mark_as_read', 'mark_as_unread']
-    
+
     def mark_as_read(self, request, queryset):
         updated = queryset.update(is_read=True)
         self.message_user(request, f'{updated} notifications marked as read.')
     mark_as_read.short_description = 'Mark as read'
-    
+
     def mark_as_unread(self, request, queryset):
         updated = queryset.update(is_read=False)
         self.message_user(request, f'{updated} notifications marked as unread.')
@@ -703,7 +725,7 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'mpesa_receipt', 'checkout_request_id', 'phone_number')
     readonly_fields = ('id', 'created_at', 'checkout_request_id', 'merchant_request_id')
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Payment Information', {
             'fields': ('user', 'payment_type', 'amount', 'currency', 'status')
@@ -719,30 +741,30 @@ class PaymentAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def user_link(self, obj):
         if obj.user:
             url = reverse('admin:core_user_change', args=[obj.user.id])
             return format_html('<a href="{}">{}</a>', url, obj.user.email)
         return 'Anonymous'
     user_link.short_description = 'User'
-    
+
     def amount_display(self, obj):
         return f'{obj.currency} {obj.amount:,.2f}'
     amount_display.short_description = 'Amount'
-    
+
     actions = ['mark_as_completed', 'mark_as_failed', 'mark_as_refunded']
-    
+
     def mark_as_completed(self, request, queryset):
         updated = queryset.update(status='completed')
         self.message_user(request, f'{updated} payments marked as completed.')
     mark_as_completed.short_description = 'Mark as completed'
-    
+
     def mark_as_failed(self, request, queryset):
         updated = queryset.update(status='failed')
         self.message_user(request, f'{updated} payments marked as failed.')
     mark_as_failed.short_description = 'Mark as failed'
-    
+
     def mark_as_refunded(self, request, queryset):
         updated = queryset.update(status='refunded')
         self.message_user(request, f'{updated} payments marked as refunded.')
@@ -759,7 +781,7 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_filter = ('rating', 'is_active', 'created_at')
     search_fields = ('author_name', 'author_role', 'content')
     list_editable = ('is_active', 'order')
-    
+
     def content_preview(self, obj):
         return obj.content[:60] + '...' if len(obj.content) > 60 else obj.content
     content_preview.short_description = 'Content'
@@ -771,10 +793,13 @@ class PartnerAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     search_fields = ('name', 'website')
     list_editable = ('is_active', 'order')
-    
+
     def logo_preview(self, obj):
         if obj.logo:
-            return format_html('<img src="{}" width="50" height="50" style="object-fit: contain;" />', obj.logo.url)
+            return format_html(
+                '<img src="{}" width="50" height="50" style="object-fit: contain;" />',
+                obj.logo.url
+            )
         return "No Logo"
     logo_preview.short_description = 'Logo Preview'
 
@@ -787,7 +812,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
     list_editable = ('is_read',)
     date_hierarchy = 'created_at'
-    
+
     fieldsets = (
         ('Contact Information', {
             'fields': ('name', 'email', 'phone')
@@ -803,14 +828,14 @@ class ContactMessageAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     actions = ['mark_as_read', 'mark_as_unread']
-    
+
     def mark_as_read(self, request, queryset):
         updated = queryset.update(is_read=True)
         self.message_user(request, f'{updated} messages marked as read.')
     mark_as_read.short_description = 'Mark as read'
-    
+
     def mark_as_unread(self, request, queryset):
         updated = queryset.update(is_read=False)
         self.message_user(request, f'{updated} messages marked as unread.')
@@ -820,11 +845,11 @@ class ContactMessageAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ('site_name', 'contact_email', 'contact_phone', 'updated_at')
-    
+
     def has_add_permission(self, request):
-        # Singleton model - prevent adding multiple instances
+        # Singleton model — prevent adding multiple instances
         return not SiteSettings.objects.exists()
-    
+
     fieldsets = (
         ('Site Information', {
             'fields': ('site_name', 'tagline')
@@ -843,7 +868,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['title'] = 'Edit Site Settings'
