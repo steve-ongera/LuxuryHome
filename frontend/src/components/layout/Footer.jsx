@@ -1,22 +1,51 @@
 import { Link } from 'react-router-dom'
-import { Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MapPin } from 'lucide-react'
+import { Mail, Phone, MapPin } from 'lucide-react'
+
+// Social icons as inline SVGs (lucide-react v0.400+ removed these)
+const FacebookIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+)
+
+const InstagramIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+)
+
+const TwitterIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+)
+
+const LinkedinIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect x="2" y="9" width="4" height="12"/>
+    <circle cx="4" cy="4" r="2"/>
+  </svg>
+)
 
 const PROPERTY_LINKS = [
-  { label: 'Mansions', to: '/properties?type=mansion' },
-  { label: 'Villas', to: '/properties?type=villa' },
+  { label: 'Mansions',          to: '/properties?type=mansion' },
+  { label: 'Villas',            to: '/properties?type=villa' },
   { label: 'Luxury Apartments', to: '/properties?type=apartment' },
-  { label: 'Beach Properties', to: '/properties?type=beach' },
-  { label: 'Commercial', to: '/properties?type=commercial' },
-  { label: 'Investment Land', to: '/properties?type=land' },
+  { label: 'Beach Properties',  to: '/properties?type=beach' },
+  { label: 'Commercial',        to: '/properties?type=commercial' },
+  { label: 'Investment Land',   to: '/properties?type=land' },
 ]
 
 const COMPANY_LINKS = [
-  { label: 'About Us', to: '/about' },
-  { label: 'Our Agents', to: '/agents' },
-  { label: 'Careers', to: '/careers' },
-  { label: 'Press', to: '/press' },
-  { label: 'Privacy Policy', to: '/privacy' },
-  { label: 'Terms of Service', to: '/terms' },
+  { label: 'About Us',        to: '/about' },
+  { label: 'Our Agents',      to: '/agents' },
+  { label: 'Careers',         to: '/careers' },
+  { label: 'Press',           to: '/press' },
+  { label: 'Privacy Policy',  to: '/privacy' },
+  { label: 'Terms of Service',to: '/terms' },
 ]
 
 export default function Footer() {
@@ -27,6 +56,7 @@ export default function Footer() {
       paddingTop: '5rem',
     }}>
       <div className="container">
+
         {/* Top grid */}
         <div style={{
           display: 'grid',
@@ -35,6 +65,7 @@ export default function Footer() {
           paddingBottom: '4rem',
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}>
+
           {/* Brand */}
           <div>
             <div style={{
@@ -46,15 +77,24 @@ export default function Footer() {
             }}>
               Luxury<span style={{ color: 'var(--gold)' }}>Home</span>
             </div>
-            <p style={{ fontSize: '0.85rem', lineHeight: 1.8, maxWidth: '280px', marginBottom: '1.5rem' }}>
-              The world's most trusted platform for ultra-premium real estate. Where discerning buyers find exceptional properties.
+            <p style={{
+              fontSize: '0.85rem',
+              lineHeight: 1.8,
+              maxWidth: '280px',
+              marginBottom: '1.5rem',
+              color: 'var(--gray-mid)',
+            }}>
+              The world's most trusted platform for ultra-premium real estate.
+              Where discerning buyers find exceptional properties.
             </p>
-            <div className="flex gap-2">
+
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               {[
-                { Icon: Instagram, href: '#' },
-                { Icon: Twitter, href: '#' },
-                { Icon: Facebook, href: '#' },
-                { Icon: Linkedin, href: '#' },
+                { Icon: InstagramIcon, href: '#' },
+                { Icon: TwitterIcon,   href: '#' },
+                { Icon: FacebookIcon,  href: '#' },
+                { Icon: LinkedinIcon,  href: '#' },
               ].map(({ Icon, href }, i) => (
                 <a
                   key={i}
@@ -78,7 +118,7 @@ export default function Footer() {
                     e.currentTarget.style.color = 'var(--gray-mid)'
                   }}
                 >
-                  <Icon size={15} />
+                  <Icon />
                 </a>
               ))}
             </div>
@@ -86,7 +126,14 @@ export default function Footer() {
 
           {/* Properties */}
           <div>
-            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '1.5rem' }}>
+            <h4 style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'var(--gold)',
+              marginBottom: '1.5rem',
+            }}>
               Properties
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -107,7 +154,14 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '1.5rem' }}>
+            <h4 style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'var(--gold)',
+              marginBottom: '1.5rem',
+            }}>
               Company
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -128,14 +182,21 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '1.5rem' }}>
+            <h4 style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'var(--gold)',
+              marginBottom: '1.5rem',
+            }}>
               Contact
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
                 { Icon: MapPin, text: 'Westlands, Nairobi, Kenya' },
-                { Icon: Phone, text: '+254 700 000 000' },
-                { Icon: Mail, text: 'info@luxuryhome.com' },
+                { Icon: Phone,  text: '+254 700 000 000' },
+                { Icon: Mail,   text: 'info@luxuryhome.com' },
               ].map(({ Icon, text }, i) => (
                 <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
                   <Icon size={14} color="var(--gold)" style={{ marginTop: '2px', flexShrink: 0 }} />
@@ -173,6 +234,7 @@ export default function Footer() {
             Crafted for the world's finest properties.
           </p>
         </div>
+
       </div>
     </footer>
   )
