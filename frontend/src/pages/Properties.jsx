@@ -97,29 +97,50 @@ export default function Properties() {
       </Helmet>
 
       {/* Header */}
-      <div style={{
-        paddingTop: '8rem',
-        paddingBottom: '3rem',
-        background: 'var(--dark)',
+      <section className="properties-header" style={{
+        paddingTop: 'calc(var(--nav-h) + var(--topbar-h) + var(--spacing-8))',
+        paddingBottom: 'var(--spacing-12)',
+        background: 'var(--text-primary)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
         <div className="container">
-          <div className="section-label">Premium Selection</div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div className="section-label" style={{ color: 'var(--primary-red)' }}>
+            Premium Selection
+          </div>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'flex-end', 
+            justifyContent: 'space-between', 
+            flexWrap: 'wrap', 
+            gap: 'var(--spacing-4)' 
+          }}>
             <div>
-              <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', marginBottom: '0.5rem' }}>
+              <h1 style={{ 
+                fontSize: 'clamp(2rem, 4vw, 3rem)', 
+                color: 'var(--white)',
+                marginBottom: 'var(--spacing-2)',
+              }}>
                 Luxury Properties
               </h1>
-              <p style={{ color: 'var(--gray-mid)', fontSize: '0.9rem' }}>
+              <p style={{ 
+                color: 'rgba(255,255,255,0.7)', 
+                fontSize: 'var(--text-sm)',
+              }}>
                 {loading ? 'Loading…' : `${totalCount.toLocaleString()} properties found`}
               </p>
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: 'var(--spacing-3)', alignItems: 'center' }}>
               <select
                 value={filters.ordering}
                 onChange={(e) => handleFilter('ordering', e.target.value)}
                 className="form-select"
-                style={{ width: 'auto', fontSize: '0.82rem' }}
+                style={{ 
+                  width: 'auto', 
+                  fontSize: 'var(--text-sm)',
+                  background: 'rgba(255,255,255,0.05)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  color: 'var(--white)',
+                }}
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
@@ -127,14 +148,26 @@ export default function Properties() {
               </select>
               <button
                 onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                style={{ background: 'var(--dark-3)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                className="btn btn-ghost btn-sm"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  color: 'var(--white)',
+                }}
               >
                 {viewMode === 'grid' ? <List size={16} /> : <Grid3X3 size={16} />}
               </button>
               <button
                 onClick={() => setMobileFiltersOpen(true)}
                 className="btn btn-ghost btn-sm"
-                style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+                style={{
+                  display: 'flex',
+                  gap: 'var(--spacing-2)',
+                  alignItems: 'center',
+                  background: 'rgba(255,255,255,0.05)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  color: 'var(--white)',
+                }}
               >
                 <SlidersHorizontal size={14} />
                 Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
@@ -142,19 +175,52 @@ export default function Properties() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container" style={{ padding: '3rem clamp(1rem,4vw,2.5rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2.5rem', alignItems: 'start' }}>
+      <div className="container" style={{ 
+        padding: 'var(--spacing-12) clamp(var(--spacing-4), 4vw, var(--spacing-10))' 
+      }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '280px 1fr', 
+          gap: 'var(--spacing-10)', 
+          alignItems: 'start' 
+        }}>
 
           {/* ── Sidebar Filters (desktop) ── */}
-          <aside className="filter-sidebar" style={{ display: 'block' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)' }}>
+          <aside className="filter-sidebar">
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              marginBottom: 'var(--spacing-6)' 
+            }}>
+              <span style={{ 
+                fontSize: 'var(--text-xs)', 
+                fontWeight: 700, 
+                letterSpacing: '0.15em', 
+                textTransform: 'uppercase', 
+                color: 'var(--primary-red)' 
+              }}>
                 Filters
               </span>
               {activeFilterCount > 0 && (
-                <button onClick={clearFilters} style={{ background: 'transparent', border: 'none', color: 'var(--gray-muted)', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                <button 
+                  onClick={clearFilters} 
+                  className="flex"
+                  style={{ 
+                    background: 'transparent', 
+                    border: 'none', 
+                    color: 'var(--text-muted)', 
+                    cursor: 'pointer', 
+                    fontSize: 'var(--text-sm)', 
+                    gap: 'var(--spacing-1)',
+                    alignItems: 'center',
+                    transition: 'color var(--duration-fast) var(--ease-smooth)',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-red)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                >
                   <X size={12} /> Clear all
                 </button>
               )}
@@ -213,7 +279,7 @@ export default function Properties() {
                 placeholder="Min price"
                 value={filters.min_price}
                 onChange={(e) => handleFilter('min_price', e.target.value)}
-                style={{ marginBottom: '0.75rem' }}
+                style={{ marginBottom: 'var(--spacing-3)' }}
               />
               <input
                 className="form-input"
@@ -227,32 +293,34 @@ export default function Properties() {
             {/* Bedrooms */}
             <div className="filter-group">
               <div className="filter-group-title">Bedrooms</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {BEDROOM_OPTIONS.map((b) => (
-                  <button
-                    key={b}
-                    onClick={() => handleFilter('bedrooms', b === 'Any' ? '' : b.replace('+', ''))}
-                    style={{
-                      padding: '0.4rem 0.85rem',
-                      fontSize: '0.78rem',
-                      background: filters.bedrooms === (b === 'Any' ? '' : b.replace('+', ''))
-                        ? 'var(--gold)' : 'var(--dark-3)',
-                      color: filters.bedrooms === (b === 'Any' ? '' : b.replace('+', ''))
-                        ? 'var(--black)' : 'var(--gray-mid)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      fontFamily: 'var(--font-body)',
-                    }}
-                  >
-                    {b}
-                  </button>
-                ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-2)' }}>
+                {BEDROOM_OPTIONS.map((b) => {
+                  const value = b === 'Any' ? '' : b.replace('+', '')
+                  const isActive = filters.bedrooms === value
+                  return (
+                    <button
+                      key={b}
+                      onClick={() => handleFilter('bedrooms', value)}
+                      className={`badge ${isActive ? 'badge-primary' : 'badge-secondary'}`}
+                      style={{
+                        cursor: 'pointer',
+                        transition: 'all var(--duration-fast) var(--ease-smooth)',
+                        fontSize: 'var(--text-sm)',
+                        padding: 'var(--spacing-2) var(--spacing-3)',
+                        background: isActive ? 'var(--primary-red)' : 'var(--gray-50)',
+                        color: isActive ? 'var(--white)' : 'var(--text-secondary)',
+                        border: isActive ? 'none' : '1px solid var(--border)',
+                      }}
+                    >
+                      {b}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
             {/* Featured */}
-            <div className="filter-group">
+            <div className="filter-group" style={{ borderBottom: 'none', marginBottom: 0, paddingBottom: 0 }}>
               <label className="luxury-checkbox">
                 <input
                   type="checkbox"
@@ -271,11 +339,21 @@ export default function Properties() {
                 <div className="loader-ring" />
               </div>
             ) : properties.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '5rem 2rem' }}>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--warm-white)', marginBottom: '0.75rem' }}>
+              <div style={{ 
+                textAlign: 'center', 
+                padding: 'var(--spacing-20) var(--spacing-8)' 
+              }}>
+                <h3 style={{ 
+                  fontSize: 'var(--text-2xl)', 
+                  color: 'var(--text-primary)', 
+                  marginBottom: 'var(--spacing-3)' 
+                }}>
                   No properties found
-                </p>
-                <p style={{ color: 'var(--gray-muted)', marginBottom: '2rem' }}>
+                </h3>
+                <p style={{ 
+                  color: 'var(--text-secondary)', 
+                  marginBottom: 'var(--spacing-6)' 
+                }}>
                   Try adjusting your filters or search terms.
                 </p>
                 <button onClick={clearFilters} className="btn btn-outline">
@@ -284,14 +362,16 @@ export default function Properties() {
               </div>
             ) : (
               <>
-                <div className={viewMode === 'grid' ? 'grid-3' : ''} style={viewMode === 'list' ? { display: 'flex', flexDirection: 'column', gap: '1rem' } : {}}>
+                <div className={viewMode === 'grid' ? 'grid-3' : ''} style={
+                  viewMode === 'list' ? { display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' } : {}
+                }>
                   {properties.map((p) => (
                     <PropertyCard key={p.id} property={p} compact={viewMode === 'list'} />
                   ))}
                 </div>
 
                 {hasNext && (
-                  <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                  <div style={{ textAlign: 'center', marginTop: 'var(--spacing-12)' }}>
                     <button
                       className="btn btn-outline"
                       onClick={() => { setPage((p) => p + 1); fetchProperties(false) }}
@@ -307,10 +387,168 @@ export default function Properties() {
         </div>
       </div>
 
+      {/* Mobile Filters Modal */}
+      {mobileFiltersOpen && (
+        <div className="modal-overlay" onClick={() => setMobileFiltersOpen(false)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>
+                Filters
+              </h3>
+              <button 
+                className="modal-close" 
+                onClick={() => setMobileFiltersOpen(false)}
+                aria-label="Close filters"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="modal-body">
+              {/* Mobile filter content - duplicate of sidebar filters */}
+              <div className="filter-sidebar" style={{ position: 'static', border: 'none', padding: 0 }}>
+                {/* Search */}
+                <div className="filter-group">
+                  <div className="filter-group-title">Keyword</div>
+                  <input
+                    className="form-input"
+                    type="text"
+                    placeholder="City, area, property name…"
+                    value={filters.search}
+                    onChange={(e) => handleFilter('search', e.target.value)}
+                  />
+                </div>
+
+                {/* Type */}
+                <div className="filter-group">
+                  <div className="filter-group-title">Property Type</div>
+                  {PROPERTY_TYPES.map((t) => (
+                    <label key={t.value} className="luxury-checkbox">
+                      <input
+                        type="radio"
+                        name="type-mobile"
+                        checked={filters.type === t.value}
+                        onChange={() => handleFilter('type', t.value)}
+                      />
+                      {t.label}
+                    </label>
+                  ))}
+                </div>
+
+                {/* Status */}
+                <div className="filter-group">
+                  <div className="filter-group-title">Listing Status</div>
+                  {STATUSES.map((s) => (
+                    <label key={s.value} className="luxury-checkbox">
+                      <input
+                        type="radio"
+                        name="status-mobile"
+                        checked={filters.status === s.value}
+                        onChange={() => handleFilter('status', s.value)}
+                      />
+                      {s.label}
+                    </label>
+                  ))}
+                </div>
+
+                {/* Price Range */}
+                <div className="filter-group">
+                  <div className="filter-group-title">Price Range (KES)</div>
+                  <input
+                    className="form-input"
+                    type="number"
+                    placeholder="Min price"
+                    value={filters.min_price}
+                    onChange={(e) => handleFilter('min_price', e.target.value)}
+                    style={{ marginBottom: 'var(--spacing-3)' }}
+                  />
+                  <input
+                    className="form-input"
+                    type="number"
+                    placeholder="Max price"
+                    value={filters.max_price}
+                    onChange={(e) => handleFilter('max_price', e.target.value)}
+                  />
+                </div>
+
+                {/* Bedrooms */}
+                <div className="filter-group">
+                  <div className="filter-group-title">Bedrooms</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-2)' }}>
+                    {BEDROOM_OPTIONS.map((b) => {
+                      const value = b === 'Any' ? '' : b.replace('+', '')
+                      const isActive = filters.bedrooms === value
+                      return (
+                        <button
+                          key={b}
+                          onClick={() => handleFilter('bedrooms', value)}
+                          className={`badge ${isActive ? 'badge-primary' : 'badge-secondary'}`}
+                          style={{
+                            cursor: 'pointer',
+                            transition: 'all var(--duration-fast) var(--ease-smooth)',
+                            fontSize: 'var(--text-sm)',
+                            padding: 'var(--spacing-2) var(--spacing-3)',
+                            background: isActive ? 'var(--primary-red)' : 'var(--gray-50)',
+                            color: isActive ? 'var(--white)' : 'var(--text-secondary)',
+                            border: isActive ? 'none' : '1px solid var(--border)',
+                          }}
+                        >
+                          {b}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Featured */}
+                <div className="filter-group" style={{ borderBottom: 'none', marginBottom: 0, paddingBottom: 0 }}>
+                  <label className="luxury-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={filters.featured === 'true'}
+                      onChange={(e) => handleFilter('featured', e.target.checked ? 'true' : '')}
+                    />
+                    Featured Only
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button 
+                className="btn btn-ghost" 
+                onClick={() => {
+                  clearFilters()
+                  setMobileFiltersOpen(false)
+                }}
+              >
+                Clear All
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={() => setMobileFiltersOpen(false)}
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @media (max-width: 900px) {
           .filter-sidebar { display: none !important; }
-          [style*="grid-template-columns: 260px"] { grid-template-columns: 1fr !important; }
+          [style*="grid-template-columns: 280px"] { grid-template-columns: 1fr !important; }
+        }
+        
+        @media (max-width: 599px) {
+          .properties-header {
+            padding-top: calc(var(--nav-h) + var(--spacing-6)) !important;
+            padding-bottom: var(--spacing-6) !important;
+          }
+        }
+        
+        /* Mobile filter modal fixes */
+        .modal-body .filter-sidebar {
+          display: block !important;
         }
       `}</style>
     </>
