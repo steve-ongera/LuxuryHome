@@ -30,58 +30,54 @@ const LinkedinIcon = () => (
 )
 
 const PROPERTY_LINKS = [
-  { label: 'Mansions',          to: '/properties?type=mansion' },
-  { label: 'Villas',            to: '/properties?type=villa' },
+  { label: 'Mansions', to: '/properties?type=mansion' },
+  { label: 'Villas', to: '/properties?type=villa' },
   { label: 'Luxury Apartments', to: '/properties?type=apartment' },
-  { label: 'Beach Properties',  to: '/properties?type=beach' },
-  { label: 'Commercial',        to: '/properties?type=commercial' },
-  { label: 'Investment Land',   to: '/properties?type=land' },
+  { label: 'Beach Properties', to: '/properties?type=beach' },
+  { label: 'Commercial', to: '/properties?type=commercial' },
+  { label: 'Investment Land', to: '/properties?type=land' },
 ]
 
 const COMPANY_LINKS = [
-  { label: 'About Us',         to: '/about' },
-  { label: 'Our Agents',       to: '/agents' },
-  { label: 'Careers',          to: '/careers' },
-  { label: 'Press',            to: '/press' },
-  { label: 'Privacy Policy',   to: '/privacy' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Our Agents', to: '/agents' },
+  { label: 'Careers', to: '/careers' },
+  { label: 'Press', to: '/press' },
+  { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Terms of Service', to: '/terms' },
 ]
 
 export default function Footer() {
   return (
-    <footer style={{
-      background: 'var(--gray-light)',
+    <footer className="footer" style={{
+      background: 'var(--gray-50)',
       borderTop: '1px solid var(--border)',
-      paddingTop: '5rem',
+      paddingTop: 'var(--spacing-16)',
+      marginTop: 'auto',
     }}>
       <div className="container">
 
         {/* Top grid */}
-        <div style={{
+        <div className="footer-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '3rem',
-          paddingBottom: '4rem',
+          gap: 'var(--spacing-12)',
+          paddingBottom: 'var(--spacing-16)',
           borderBottom: '1px solid var(--border)',
         }}>
 
           {/* Brand */}
-          <div>
-            {/* Logo image + name */}
-            <Link
-              to="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.65rem',
-                marginBottom: '1.25rem',
-                textDecoration: 'none',
-              }}
-            >
+          <div className="footer-brand">
+            <Link to="/" className="footer-logo" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-3)',
+              marginBottom: 'var(--spacing-5)',
+              textDecoration: 'none',
+            }}>
               <img
                 src="/logo.png"
-                alt=""
-                aria-hidden="true"
+                alt="LuxuryHome"
                 style={{
                   height: '52px',
                   width: 'auto',
@@ -89,9 +85,9 @@ export default function Footer() {
                   flexShrink: 0,
                 }}
               />
-              <span style={{
+              <span className="footer-logo-text" style={{
                 fontFamily: 'var(--font-family)',
-                fontSize: '1.7rem',
+                fontSize: 'var(--text-2xl)',
                 fontWeight: 700,
                 color: 'var(--text-primary)',
                 letterSpacing: '-0.01em',
@@ -101,11 +97,11 @@ export default function Footer() {
               </span>
             </Link>
 
-            <p style={{
-              fontSize: '0.85rem',
+            <p className="footer-description" style={{
+              fontSize: 'var(--text-sm)',
               lineHeight: 1.8,
               maxWidth: '280px',
-              marginBottom: '1.5rem',
+              marginBottom: 'var(--spacing-6)',
               color: 'var(--text-secondary)',
             }}>
               The world's most trusted platform for ultra-premium real estate.
@@ -113,35 +109,41 @@ export default function Footer() {
             </p>
 
             {/* Social icons */}
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="footer-social" style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
               {[
-                { Icon: InstagramIcon, href: '#' },
-                { Icon: TwitterIcon,   href: '#' },
-                { Icon: FacebookIcon,  href: '#' },
-                { Icon: LinkedinIcon,  href: '#' },
-              ].map(({ Icon, href }, i) => (
+                { Icon: InstagramIcon, href: '#', label: 'Instagram' },
+                { Icon: TwitterIcon, href: '#', label: 'Twitter' },
+                { Icon: FacebookIcon, href: '#', label: 'Facebook' },
+                { Icon: LinkedinIcon, href: '#', label: 'LinkedIn' },
+              ].map(({ Icon, href, label }, i) => (
                 <a
                   key={i}
                   href={href}
+                  aria-label={label}
+                  className="footer-social-link"
                   style={{
                     width: '36px',
                     height: '36px',
-                    borderRadius: '6px',
+                    borderRadius: 'var(--radius-base)',
                     border: '1px solid var(--border)',
                     background: 'var(--white)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    transition: 'all 0.2s',
+                    transition: 'all var(--duration-fast) var(--ease-smooth)',
                     color: 'var(--text-secondary)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'var(--primary-red)'
                     e.currentTarget.style.color = 'var(--primary-red)'
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'var(--border)'
                     e.currentTarget.style.color = 'var(--text-secondary)'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = 'none'
                   }}
                 >
                   <Icon />
@@ -151,25 +153,42 @@ export default function Footer() {
           </div>
 
           {/* Properties */}
-          <div>
-            <h4 style={{
-              fontSize: '0.75rem',
+          <div className="footer-column">
+            <h4 className="footer-heading" style={{
+              fontSize: 'var(--text-xs)',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: 'var(--text-primary)',
-              marginBottom: '1.5rem',
+              marginBottom: 'var(--spacing-6)',
             }}>
               Properties
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <ul className="footer-links" style={{
+              listStyle: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--spacing-3)',
+            }}>
               {PROPERTY_LINKS.map((l) => (
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-red)'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                    className="footer-link"
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-secondary)',
+                      transition: 'color var(--duration-fast) var(--ease-smooth)',
+                      display: 'inline-block',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'var(--primary-red)'
+                      e.currentTarget.style.transform = 'translateX(4px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'var(--text-secondary)'
+                      e.currentTarget.style.transform = 'translateX(0)'
+                    }}
                   >
                     {l.label}
                   </Link>
@@ -179,25 +198,42 @@ export default function Footer() {
           </div>
 
           {/* Company */}
-          <div>
-            <h4 style={{
-              fontSize: '0.75rem',
+          <div className="footer-column">
+            <h4 className="footer-heading" style={{
+              fontSize: 'var(--text-xs)',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: 'var(--text-primary)',
-              marginBottom: '1.5rem',
+              marginBottom: 'var(--spacing-6)',
             }}>
               Company
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <ul className="footer-links" style={{
+              listStyle: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--spacing-3)',
+            }}>
               {COMPANY_LINKS.map((l) => (
                 <li key={l.to}>
                   <Link
                     to={l.to}
-                    style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-red)'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                    className="footer-link"
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-secondary)',
+                      transition: 'color var(--duration-fast) var(--ease-smooth)',
+                      display: 'inline-block',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'var(--primary-red)'
+                      e.currentTarget.style.transform = 'translateX(4px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'var(--text-secondary)'
+                      e.currentTarget.style.transform = 'translateX(0)'
+                    }}
                   >
                     {l.label}
                   </Link>
@@ -207,26 +243,48 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
-            <h4 style={{
-              fontSize: '0.75rem',
+          <div className="footer-column">
+            <h4 className="footer-heading" style={{
+              fontSize: 'var(--text-xs)',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               color: 'var(--text-primary)',
-              marginBottom: '1.5rem',
+              marginBottom: 'var(--spacing-6)',
             }}>
               Contact
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="footer-contact" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--spacing-4)',
+            }}>
               {[
                 { Icon: MapPin, text: 'Westlands, Nairobi, Kenya' },
-                { Icon: Phone,  text: '+254 700 000 000' },
-                { Icon: Mail,   text: 'info@luxuryhome.com' },
+                { Icon: Phone, text: '+254 700 000 000' },
+                { Icon: Mail, text: 'info@luxuryhome.com' },
               ].map(({ Icon, text }, i) => (
-                <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                  <Icon size={14} color="var(--primary-red)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{text}</span>
+                <div key={i} className="footer-contact-item" style={{
+                  display: 'flex',
+                  gap: 'var(--spacing-3)',
+                  alignItems: 'flex-start',
+                }}>
+                  <Icon 
+                    size={14} 
+                    color="var(--primary-red)" 
+                    style={{ 
+                      marginTop: '2px', 
+                      flexShrink: 0,
+                      opacity: 0.8,
+                    }} 
+                  />
+                  <span style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-secondary)',
+                    lineHeight: 1.5,
+                  }}>
+                    {text}
+                  </span>
                 </div>
               ))}
             </div>
@@ -236,26 +294,40 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               className="btn btn-outline btn-sm"
-              style={{ marginTop: '1.5rem', display: 'inline-flex' }}
+              style={{
+                marginTop: 'var(--spacing-6)',
+                display: 'inline-flex',
+                gap: 'var(--spacing-2)',
+              }}
             >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
               WhatsApp Us
             </a>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div style={{
+        <div className="footer-bottom" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '1.5rem 0',
-          gap: '1rem',
+          padding: 'var(--spacing-6) 0',
+          gap: 'var(--spacing-4)',
           flexWrap: 'wrap',
         }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          <p style={{
+            fontSize: 'var(--text-sm)',
+            color: 'var(--text-muted)',
+          }}>
             © {new Date().getFullYear()} LuxuryHome. All rights reserved.
           </p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          <p style={{
+            fontSize: 'var(--text-sm)',
+            color: 'var(--text-muted)',
+            textAlign: 'right',
+          }}>
             Crafted for the world's finest properties.
           </p>
         </div>

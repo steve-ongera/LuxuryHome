@@ -8,18 +8,18 @@ import { useAuth } from '../../context/AuthContext.jsx'
 
 const NAV_LINKS = [
   { label: 'Properties', to: '/properties', icon: Building2 },
-  { label: 'Hotels',     to: '/hotels',     icon: Hotel },
-  { label: 'About',      to: '/about',      icon: Info },
-  { label: 'Contact',    to: '/contact',    icon: Phone },
+  { label: 'Hotels', to: '/hotels', icon: Hotel },
+  { label: 'About', to: '/about', icon: Info },
+  { label: 'Contact', to: '/contact', icon: Phone },
 ]
 
 export default function Navbar() {
-  const [scrolled,     setScrolled]     = useState(false)
-  const [drawerOpen,   setDrawerOpen]   = useState(false)
-  const [profileOpen,  setProfileOpen]  = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const { user, logout, isAdmin, isAgent } = useAuth()
-  const navigate  = useNavigate()
-  const location  = useLocation()
+  const navigate = useNavigate()
+  const location = useLocation()
   const profileRef = useRef(null)
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function Navbar() {
       <div className="topbar">
         <div className="container">
           <div className="topbar-inner">
-            <ul className="topbar-links" style={{ display: 'flex' }}>
+            <ul className="topbar-links">
               <li className="topbar-item">
                 <Phone size={12} /> +254 700 000 000
               </li>
@@ -81,7 +81,7 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            <div className="flex" style={{ alignItems: 'center', gap: 'var(--spacing-5)' }}>
               <Link to="/list-property" className="topbar-cta">
                 List Your Property
               </Link>
@@ -101,32 +101,18 @@ export default function Navbar() {
         <div className="container">
           <div className="navbar-inner">
 
-            {/* Logo — icon + text side by side */}
-            <Link
-              to="/"
-              className="navbar-logo"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', textDecoration: 'none' }}
-            >
+            {/* Logo */}
+            <Link to="/" className="navbar-logo">
               <img
                 src="/logo.png"
-                alt=""
-                aria-hidden="true"
-                style={{ height: '40px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
+                alt="LuxuryHome"
+                style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
               />
-              <span style={{
-                fontFamily: 'var(--font-family)',
-                fontSize: 'clamp(1.1rem, 3vw, 1.5rem)',
-                fontWeight: 700,
-                letterSpacing: '-0.01em',
-                color: 'var(--text-primary)',
-                lineHeight: 1,
-              }}>
-                Luxury<span style={{ color: 'var(--primary-red)' }}>Home</span>
-              </span>
+              <span>Luxury<span>Home</span></span>
             </Link>
 
             {/* Desktop Links */}
-            <ul className="navbar-links" style={{ display: 'flex' }}>
+            <ul className="navbar-links">
               {NAV_LINKS.map((l) => (
                 <li key={l.to}>
                   <NavLink
@@ -140,77 +126,83 @@ export default function Navbar() {
             </ul>
 
             {/* Right side */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="flex" style={{ alignItems: 'center', gap: 'var(--spacing-3)' }}>
 
               {/* Desktop auth */}
-              <div className="desktop-auth-buttons" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="desktop-auth-buttons" style={{ alignItems: 'center', gap: 'var(--spacing-2)' }}>
                 {user ? (
-                  <div style={{ position: 'relative' }} ref={profileRef}>
+                  <div className="relative" ref={profileRef}>
                     <button
                       onClick={() => setProfileOpen(!profileOpen)}
+                      className="flex"
                       style={{
-                        display: 'flex', alignItems: 'center', gap: '0.5rem',
-                        background: 'var(--gray-light)',
+                        alignItems: 'center',
+                        gap: 'var(--spacing-2)',
+                        background: 'var(--gray-50)',
                         border: '1px solid var(--border)',
                         color: 'var(--text-primary)',
-                        padding: '0 1rem',
+                        padding: '0 var(--spacing-4)',
                         height: '40px',
-                        borderRadius: '6px',
+                        borderRadius: 'var(--radius-base)',
                         cursor: 'pointer',
                         fontFamily: 'var(--font-family)',
-                        fontSize: '0.82rem',
+                        fontSize: 'var(--text-sm)',
                         fontWeight: 500,
-                        transition: 'border-color 0.2s',
+                        transition: 'border-color var(--duration-fast) var(--ease-smooth)',
                         whiteSpace: 'nowrap',
                       }}
                     >
                       <User size={14} color="var(--primary-red)" />
                       <span>{user.first_name || 'Account'}</span>
-                      <ChevronDown size={12} style={{ transition: 'transform 0.2s', transform: profileOpen ? 'rotate(180deg)' : 'none' }} />
+                      <ChevronDown 
+                        size={12} 
+                        style={{ 
+                          transition: 'transform var(--duration-fast) var(--ease-smooth)',
+                          transform: profileOpen ? 'rotate(180deg)' : 'none' 
+                        }} 
+                      />
                     </button>
 
                     {profileOpen && (
-                      <div style={{
+                      <div className="card" style={{
                         position: 'absolute',
-                        top: 'calc(100% + 0.5rem)',
+                        top: 'calc(100% + var(--spacing-2))',
                         right: 0,
                         minWidth: '200px',
-                        background: 'var(--white)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radius-md)',
                         overflow: 'hidden',
-                        zIndex: 1001,
-                        boxShadow: '0 12px 32px rgba(31,41,55,0.14)',
+                        zIndex: 'var(--z-dropdown)',
+                        boxShadow: 'var(--shadow-xl)',
+                        border: '1px solid var(--border)',
                       }}>
                         {[
                           { to: dashboardPath, Icon: LayoutDashboard, label: 'Dashboard' },
                           { to: '/dashboard?tab=favorites', Icon: Heart, label: 'Favorites' },
                         ].map(({ to, Icon, label }) => (
-                          <Link key={to} to={to} onClick={() => setProfileOpen(false)} style={{
-                            display: 'flex', alignItems: 'center', gap: '0.75rem',
-                            padding: '0.85rem 1.25rem',
-                            fontSize: '0.85rem',
-                            color: 'var(--text-secondary)',
-                            borderBottom: '1px solid var(--border)',
-                            transition: 'color 0.2s, background 0.2s',
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--primary-red)'; e.currentTarget.style.background = 'var(--red-tint)' }}
-                          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'transparent' }}
+                          <Link
+                            key={to}
+                            to={to}
+                            onClick={() => setProfileOpen(false)}
+                            className="drawer-nav-link"
+                            style={{ borderRadius: 0 }}
                           >
                             <Icon size={14} /> {label}
                           </Link>
                         ))}
-                        <button onClick={handleLogout} style={{
-                          display: 'flex', alignItems: 'center', gap: '0.75rem',
-                          padding: '0.85rem 1.25rem',
-                          fontSize: '0.85rem',
-                          color: '#E8614C',
-                          background: 'transparent',
-                          border: 'none',
-                          cursor: 'pointer',
-                          width: '100%',
-                          fontFamily: 'var(--font-family)',
-                        }}>
+                        <button
+                          onClick={handleLogout}
+                          className="drawer-nav-link"
+                          style={{
+                            borderRadius: 0,
+                            color: 'var(--error)',
+                            width: '100%',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-family)',
+                            fontSize: 'var(--text-sm)',
+                          }}
+                        >
                           <LogOut size={14} /> Sign Out
                         </button>
                       </div>
@@ -218,8 +210,8 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <>
-                    <Link to="/login"    className="btn btn-ghost btn-sm">Sign In</Link>
-                    <Link to="/register" className="btn btn-gold  btn-sm">Register</Link>
+                    <Link to="/login" className="btn btn-ghost btn-sm">Sign In</Link>
+                    <Link to="/register" className="btn btn-primary btn-sm">Register</Link>
                   </>
                 )}
               </div>
@@ -227,22 +219,8 @@ export default function Navbar() {
               {/* Hamburger */}
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="hamburger-btn"
+                className="navbar-toggle"
                 aria-label="Open menu"
-                style={{
-                  background: 'var(--white)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-primary)',
-                  borderRadius: '6px',
-                  width: '44px',
-                  height: '44px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  WebkitTapHighlightColor: 'transparent',
-                }}
               >
                 <Menu size={20} />
               </button>
@@ -259,31 +237,26 @@ export default function Navbar() {
       />
 
       {/* ── Drawer Sidebar ────────────────────────────────── */}
-      <aside className={`drawer ${drawerOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu">
+      <aside 
+        className={`drawer ${drawerOpen ? 'open' : ''}`} 
+        role="dialog" 
+        aria-modal="true" 
+        aria-label="Navigation menu"
+      >
 
-        {/* Drawer Header — icon + text */}
+        {/* Drawer Header */}
         <div className="drawer-header">
           <Link
             to="/"
             className="drawer-logo"
             onClick={() => setDrawerOpen(false)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
           >
             <img
               src="/logo.png"
-              alt=""
-              aria-hidden="true"
-              style={{ height: '34px', width: 'auto', objectFit: 'contain', flexShrink: 0 }}
+              alt="LuxuryHome"
+              style={{ height: '34px', width: 'auto', objectFit: 'contain' }}
             />
-            <span style={{
-              fontFamily: 'var(--font-family)',
-              fontSize: '1.25rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              lineHeight: 1,
-            }}>
-              Luxury<span style={{ color: 'var(--primary-red)' }}>Home</span>
-            </span>
+            <span>Luxury<span>Home</span></span>
           </Link>
           <button
             className="drawer-close"
@@ -296,7 +269,11 @@ export default function Navbar() {
 
         {/* Drawer Nav Links */}
         <nav className="drawer-nav">
-          <Link to="/" className={`drawer-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)}>
+          <Link 
+            to="/" 
+            className={`drawer-nav-link ${location.pathname === '/' ? 'active' : ''}`} 
+            onClick={() => setDrawerOpen(false)}
+          >
             <Home size={17} /> Home
           </Link>
           {NAV_LINKS.map(({ label, to, icon: Icon }) => (
@@ -310,31 +287,70 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <div style={{ height: '1px', background: 'var(--border)', margin: '1.25rem 0' }} />
+          <div className="gold-divider" style={{ margin: 'var(--spacing-5) 0', width: 'auto' }} />
 
           {user ? (
             <>
-              <div style={{ padding: '0.75rem', background: 'var(--gray-light)', borderRadius: '8px', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--primary-red)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{
+                padding: 'var(--spacing-3)',
+                background: 'var(--gray-50)',
+                borderRadius: 'var(--radius-base)',
+                marginBottom: 'var(--spacing-2)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--spacing-3)',
+              }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'var(--primary-red)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
                   <User size={16} color="var(--white)" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                  <div style={{ 
+                    fontSize: 'var(--text-sm)', 
+                    fontWeight: 600, 
+                    color: 'var(--text-primary)' 
+                  }}>
                     {user.first_name} {user.last_name}
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{user.email}</div>
+                  <div style={{ 
+                    fontSize: 'var(--text-xs)', 
+                    color: 'var(--text-muted)' 
+                  }}>
+                    {user.email}
+                  </div>
                 </div>
               </div>
-              <Link to={dashboardPath} className="drawer-nav-link" onClick={() => setDrawerOpen(false)}>
+              <Link 
+                to={dashboardPath} 
+                className="drawer-nav-link" 
+                onClick={() => setDrawerOpen(false)}
+              >
                 <LayoutDashboard size={17} /> Dashboard
               </Link>
-              <Link to="/dashboard?tab=favorites" className="drawer-nav-link" onClick={() => setDrawerOpen(false)}>
+              <Link 
+                to="/dashboard?tab=favorites" 
+                className="drawer-nav-link" 
+                onClick={() => setDrawerOpen(false)}
+              >
                 <Heart size={17} /> Favorites
               </Link>
             </>
           ) : (
-            <div style={{ padding: '0.5rem 0' }}>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem', padding: '0 0.75rem' }}>
+            <div style={{ padding: 'var(--spacing-2) 0' }}>
+              <p style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-muted)',
+                marginBottom: 'var(--spacing-3)',
+                padding: '0 var(--spacing-3)',
+              }}>
                 Sign in to save favorites and track quotes
               </p>
             </div>
@@ -347,49 +363,62 @@ export default function Navbar() {
             <button
               onClick={async () => { await handleLogout(); setDrawerOpen(false) }}
               style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
-                width: '100%', padding: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--spacing-2)',
+                width: '100%',
+                padding: 'var(--spacing-3)',
                 background: 'transparent',
-                border: '1px solid rgba(232,97,76,0.35)',
-                borderRadius: '6px',
-                color: '#E8614C',
-                fontSize: '0.85rem',
+                border: '1px solid rgba(232, 97, 76, 0.35)',
+                borderRadius: 'var(--radius-base)',
+                color: 'var(--error)',
+                fontSize: 'var(--text-sm)',
                 fontWeight: 500,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-family)',
-                transition: 'background 0.2s',
+                transition: 'background var(--duration-fast) var(--ease-smooth)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(220, 38, 38, 0.05)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent'
               }}
             >
               <LogOut size={15} /> Sign Out
             </button>
           ) : (
             <>
-              <Link to="/login"    className="btn btn-ghost w-full" onClick={() => setDrawerOpen(false)} style={{ justifyContent: 'center' }}>
+              <Link 
+                to="/login" 
+                className="btn btn-ghost w-full" 
+                onClick={() => setDrawerOpen(false)}
+                style={{ justifyContent: 'center' }}
+              >
                 Sign In
               </Link>
-              <Link to="/register" className="btn btn-gold w-full"  onClick={() => setDrawerOpen(false)} style={{ justifyContent: 'center' }}>
+              <Link 
+                to="/register" 
+                className="btn btn-primary w-full" 
+                onClick={() => setDrawerOpen(false)}
+                style={{ justifyContent: 'center' }}
+              >
                 Create Account
               </Link>
             </>
           )}
 
-          <p style={{ textAlign: 'center', fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+          <p style={{
+            textAlign: 'center',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-muted)',
+            marginTop: 'var(--spacing-2)',
+          }}>
             © {new Date().getFullYear()} LuxuryHome
           </p>
         </div>
       </aside>
-
-      <style>{`
-        @media (min-width: 768px) {
-          .hamburger-btn { display: none !important; }
-          .desktop-auth-buttons { display: flex !important; }
-        }
-        @media (max-width: 767px) {
-          .desktop-auth-buttons { display: none !important; }
-          .hamburger-btn { display: flex !important; }
-          .navbar-links { display: none !important; }
-        }
-      `}</style>
     </>
   )
 }
