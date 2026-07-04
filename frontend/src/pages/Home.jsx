@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { motion, useInView } from 'framer-motion'
-import { Search, ArrowRight, ChevronDown, Play } from 'lucide-react'
+import { Search, ArrowRight, ChevronDown, Play, Star, Building2, Home as HomeIcon, Hotel, Landmark } from 'lucide-react'
 import PropertyCard from '../components/property/PropertyCard.jsx'
 import { propertiesAPI, hotelsAPI, utilsAPI } from '../utils/api.js'
 
@@ -29,13 +29,13 @@ function Counter({ target, suffix = '' }) {
 
 // ── Property Type Filter Tabs ─────────────────────────────
 const TYPES = [
-  { value: '', label: 'All' },
-  { value: 'mansion', label: 'Mansions' },
-  { value: 'villa', label: 'Villas' },
-  { value: 'apartment', label: 'Apartments' },
-  { value: 'land', label: 'Land' },
-  { value: 'hotel', label: 'Hotels' },
-  { value: 'beach', label: 'Beach' },
+  { value: '', label: 'All', icon: HomeIcon },
+  { value: 'mansion', label: 'Mansions', icon: Building2 },
+  { value: 'villa', label: 'Villas', icon: HomeIcon },
+  { value: 'apartment', label: 'Apartments', icon: Building2 },
+  { value: 'land', label: 'Land', icon: Landmark },
+  { value: 'hotel', label: 'Hotels', icon: Hotel },
+  { value: 'beach', label: 'Beach', icon: HomeIcon },
 ]
 
 export default function Home() {
@@ -80,12 +80,14 @@ export default function Home() {
       <Helmet>
         <title>LuxuryHome – Premium Real Estate | Mansions, Villas & Luxury Properties</title>
         <meta name="description" content="Discover world-class luxury properties in Kenya and beyond. Mansions, villas, beachfront estates, luxury hotels and investment land. Request a free quotation today." />
+        <meta property="og:title" content="LuxuryHome – Premium Real Estate" />
+        <meta property="og:description" content="Discover world-class luxury properties in Kenya and beyond. Request a free quotation today." />
+        <link rel="canonical" href="https://luxuryhome.com" />
       </Helmet>
 
       {/* ── HERO ──────────────────────────────────────────── */}
       <section className="hero">
         <div className="hero-bg">
-          {/* Replace src with your actual video */}
           <video
             className="hero-bg-video"
             autoPlay
@@ -96,8 +98,7 @@ export default function Home() {
           >
             {/* <source src="/hero-video.mp4" type="video/mp4" /> */}
           </video>
-          {/* Fallback bg image */}
-          <div style={{
+          <div className="hero-fallback" style={{
             position: 'absolute', inset: 0,
             backgroundImage: 'url(https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&q=80)',
             backgroundSize: 'cover',
@@ -107,7 +108,7 @@ export default function Home() {
         </div>
         <div className="hero-overlay" />
 
-        <div className="container hero-content" style={{ width: '100%' }}>
+        <div className="container hero-content">
           <motion.div
             variants={stagger}
             initial="hidden"
@@ -130,27 +131,30 @@ export default function Home() {
             </motion.p>
 
             {/* Search Bar */}
-            <motion.form variants={fadeUp} onSubmit={handleSearch}>
-              <div className="search-bar" style={{ maxWidth: '680px', display: 'flex', flexWrap: 'wrap' }}>
+            <motion.form variants={fadeUp} onSubmit={handleSearch} className="hero-search">
+              <div className="search-bar" style={{ maxWidth: '680px' }}>
                 <select
                   value={searchType}
                   onChange={(e) => setSearchType(e.target.value)}
+                  className="search-select"
                   style={{
                     background: 'transparent',
                     border: 'none',
                     borderRight: '1px solid rgba(255,255,255,0.1)',
-                    color: searchType ? 'var(--warm-white)' : 'var(--gray-muted)',
-                    padding: '1.1rem 1.25rem',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.85rem',
+                    color: searchType ? 'var(--white)' : 'var(--text-muted)',
+                    padding: 'var(--spacing-4) var(--spacing-5)',
+                    fontFamily: 'var(--font-family)',
+                    fontSize: 'var(--text-sm)',
                     outline: 'none',
                     cursor: 'pointer',
                     minWidth: '140px',
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
                   }}
                 >
-                  <option value="" style={{ background: 'var(--dark-2)' }}>Property Type</option>
+                  <option value="" style={{ background: 'var(--text-primary)' }}>Property Type</option>
                   {TYPES.slice(1).map((t) => (
-                    <option key={t.value} value={t.value} style={{ background: 'var(--dark-2)' }}>
+                    <option key={t.value} value={t.value} style={{ background: 'var(--text-primary)' }}>
                       {t.label}
                     </option>
                   ))}
@@ -158,6 +162,7 @@ export default function Home() {
 
                 <input
                   type="text"
+                  className="search-input"
                   placeholder="Search by city, area or property name…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,8 +171,8 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  className="btn btn-gold"
-                  style={{ borderRadius: 0, padding: '0 2rem', whiteSpace: 'nowrap' }}
+                  className="btn btn-primary search-btn"
+                  style={{ borderRadius: 0, padding: '0 var(--spacing-8)', whiteSpace: 'nowrap' }}
                 >
                   <Search size={16} />
                   Search
@@ -175,20 +180,38 @@ export default function Home() {
               </div>
             </motion.form>
 
-            <motion.div variants={fadeUp} style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <motion.div variants={fadeUp} className="hero-quick-suggestions" style={{ 
+              marginTop: 'var(--spacing-6)', 
+              display: 'flex', 
+              gap: 'var(--spacing-3)', 
+              flexWrap: 'wrap' 
+            }}>
               {['Diani Beach Villa', 'Westlands Penthouse', 'Karen Mansion'].map((q) => (
                 <button
                   key={q}
                   onClick={() => { setSearchQuery(q); }}
+                  className="suggestion-chip"
                   style={{
                     background: 'rgba(255,255,255,0.06)',
                     border: '1px solid rgba(255,255,255,0.12)',
-                    color: 'var(--gray-mid)',
-                    padding: '0.4rem 1rem',
-                    fontSize: '0.75rem',
+                    color: 'rgba(255,255,255,0.7)',
+                    padding: 'var(--spacing-2) var(--spacing-4)',
+                    fontSize: 'var(--text-sm)',
                     cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    fontFamily: 'var(--font-body)',
+                    transition: 'all var(--duration-fast) var(--ease-smooth)',
+                    fontFamily: 'var(--font-family)',
+                    borderRadius: 'var(--radius-full)',
+                    backdropFilter: 'blur(4px)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.12)'
+                    e.currentTarget.style.borderColor = 'var(--primary-red)'
+                    e.currentTarget.style.color = 'var(--white)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+                    e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
                   }}
                 >
                   {q}
@@ -199,31 +222,32 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator */}
-        <div style={{
+        <div className="scroll-indicator" style={{
           position: 'absolute',
-          bottom: '2.5rem',
+          bottom: 'var(--spacing-10)',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.4rem',
+          gap: 'var(--spacing-2)',
           animation: 'bounceDown 2s infinite',
         }}>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: 'var(--gray-muted)', textTransform: 'uppercase' }}>Scroll</span>
-          <ChevronDown size={16} color="var(--gold)" />
+          <span style={{ 
+            fontSize: 'var(--text-xs)', 
+            letterSpacing: '0.2em', 
+            color: 'rgba(255,255,255,0.5)', 
+            textTransform: 'uppercase',
+            fontWeight: 600,
+          }}>
+            Scroll
+          </span>
+          <ChevronDown size={16} color="var(--primary-red)" />
         </div>
-
-        <style>{`
-          @keyframes bounceDown {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(6px); }
-          }
-        `}</style>
       </section>
 
       {/* ── STATS ─────────────────────────────────────────── */}
-      <section style={{ background: 'var(--dark)' }}>
+      <section className="stats-section" style={{ background: 'var(--text-primary)' }}>
         <div className="container">
           <div className="stats-grid">
             {[
@@ -244,7 +268,7 @@ export default function Home() {
       </section>
 
       {/* ── FEATURED PROPERTIES ───────────────────────────── */}
-      <section className="section" style={{ background: 'var(--black)' }}>
+      <section className="section featured-section" style={{ background: 'var(--white)' }}>
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -253,36 +277,73 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <div className="section-label">Handpicked for You</div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="section-header" style={{ 
+              display: 'flex', 
+              alignItems: 'flex-end', 
+              justifyContent: 'space-between', 
+              marginBottom: 'var(--spacing-12)', 
+              flexWrap: 'wrap', 
+              gap: 'var(--spacing-4)' 
+            }}>
               <h2 className="section-title">Featured Properties</h2>
-              <Link to="/properties?featured=true" className="btn btn-outline btn-sm" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <Link to="/properties?featured=true" className="btn btn-outline btn-sm" style={{ 
+                display: 'flex', 
+                gap: 'var(--spacing-2)', 
+                alignItems: 'center' 
+              }}>
                 View All <ArrowRight size={14} />
               </Link>
             </div>
 
             {/* Type tabs */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-              {TYPES.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => setActiveTab(t.value)}
-                  style={{
-                    padding: '0.5rem 1.25rem',
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    background: activeTab === t.value ? 'var(--gold)' : 'transparent',
-                    color: activeTab === t.value ? 'var(--black)' : 'var(--gray-mid)',
-                    border: `1px solid ${activeTab === t.value ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}`,
-                    cursor: 'pointer',
-                    transition: 'all 0.25s',
-                    fontFamily: 'var(--font-body)',
-                  }}
-                >
-                  {t.label}
-                </button>
-              ))}
+            <div className="type-tabs" style={{ 
+              display: 'flex', 
+              gap: 'var(--spacing-2)', 
+              marginBottom: 'var(--spacing-10)', 
+              flexWrap: 'wrap' 
+            }}>
+              {TYPES.map((t) => {
+                const Icon = t.icon
+                return (
+                  <button
+                    key={t.value}
+                    onClick={() => setActiveTab(t.value)}
+                    className={`type-tab ${activeTab === t.value ? 'active' : ''}`}
+                    style={{
+                      padding: 'var(--spacing-2) var(--spacing-5)',
+                      fontSize: 'var(--text-sm)',
+                      fontWeight: 500,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      background: activeTab === t.value ? 'var(--primary-red)' : 'transparent',
+                      color: activeTab === t.value ? 'var(--white)' : 'var(--text-secondary)',
+                      border: `1px solid ${activeTab === t.value ? 'var(--primary-red)' : 'var(--border)'}`,
+                      cursor: 'pointer',
+                      transition: 'all var(--duration-fast) var(--ease-smooth)',
+                      fontFamily: 'var(--font-family)',
+                      borderRadius: 'var(--radius-full)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--spacing-2)',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (activeTab !== t.value) {
+                        e.currentTarget.style.borderColor = 'var(--primary-red)'
+                        e.currentTarget.style.color = 'var(--text-primary)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (activeTab !== t.value) {
+                        e.currentTarget.style.borderColor = 'var(--border)'
+                        e.currentTarget.style.color = 'var(--text-secondary)'
+                      }
+                    }}
+                  >
+                    <Icon size={14} />
+                    {t.label}
+                  </button>
+                )
+              })}
             </div>
           </motion.div>
 
@@ -306,7 +367,6 @@ export default function Home() {
                 ))}
             </motion.div>
           ) : (
-            /* Demo cards when API is empty */
             <motion.div className="grid-3" variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               {DEMO_PROPERTIES.slice(0, 6).map((p) => (
                 <motion.div key={p.id} variants={fadeUp}>
@@ -319,11 +379,11 @@ export default function Home() {
       </section>
 
       {/* ── QUOTE CTA BANNER ──────────────────────────────── */}
-      <section style={{
-        background: 'linear-gradient(135deg, var(--dark-2), var(--dark))',
-        borderTop: '1px solid rgba(201,168,76,0.15)',
-        borderBottom: '1px solid rgba(201,168,76,0.15)',
-        padding: '5rem 0',
+      <section className="quote-banner" style={{
+        background: 'linear-gradient(135deg, var(--text-primary), var(--gray-800))',
+        borderTop: '1px solid rgba(217, 63, 48, 0.15)',
+        borderBottom: '1px solid rgba(217, 63, 48, 0.15)',
+        padding: 'var(--spacing-20) 0',
       }}>
         <div className="container text-center">
           <motion.div
@@ -332,17 +392,33 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <div className="section-label" style={{ justifyContent: 'center' }}>Free & Instant</div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '1rem' }}>
+            <h2 className="banner-title" style={{
+              fontFamily: 'var(--font-family)',
+              fontSize: 'clamp(2rem, 4vw, var(--text-4xl))',
+              color: 'var(--white)',
+              marginBottom: 'var(--spacing-4)',
+              fontWeight: 700,
+            }}>
               Request a Quotation — No Account Required
             </h2>
-            <p style={{ color: 'var(--gray-mid)', maxWidth: '500px', margin: '0 auto 2.5rem' }}>
+            <p className="banner-subtitle" style={{
+              color: 'rgba(255,255,255,0.7)',
+              maxWidth: '500px',
+              margin: '0 auto var(--spacing-10)',
+              fontSize: 'var(--text-lg)',
+            }}>
               Interested in a property? Get a personalised quote, negotiate prices or schedule a private viewing — completely free, no sign-up needed.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/properties" className="btn btn-gold btn-lg">
+            <div className="banner-actions" style={{ 
+              display: 'flex', 
+              gap: 'var(--spacing-4)', 
+              justifyContent: 'center', 
+              flexWrap: 'wrap' 
+            }}>
+              <Link to="/properties" className="btn btn-primary btn-lg">
                 Browse Properties
               </Link>
-              <Link to="/contact" className="btn btn-ghost btn-lg">
+              <Link to="/contact" className="btn btn-outline btn-lg" style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'var(--white)' }}>
                 Talk to an Agent
               </Link>
             </div>
@@ -351,12 +427,23 @@ export default function Home() {
       </section>
 
       {/* ── TRENDING ──────────────────────────────────────── */}
-      <section className="section" style={{ background: 'var(--dark)' }}>
+      <section className="section trending-section" style={{ background: 'var(--gray-50)' }}>
         <div className="container">
           <div className="section-label">Hot Right Now</div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div className="section-header" style={{ 
+            display: 'flex', 
+            alignItems: 'flex-end', 
+            justifyContent: 'space-between', 
+            marginBottom: 'var(--spacing-12)', 
+            flexWrap: 'wrap', 
+            gap: 'var(--spacing-4)' 
+          }}>
             <h2 className="section-title">Trending Mansions</h2>
-            <Link to="/properties?type=mansion" className="btn btn-outline btn-sm" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <Link to="/properties?type=mansion" className="btn btn-outline btn-sm" style={{ 
+              display: 'flex', 
+              gap: 'var(--spacing-2)', 
+              alignItems: 'center' 
+            }}>
               All Mansions <ArrowRight size={14} />
             </Link>
           </div>
@@ -369,10 +456,10 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS ──────────────────────────────────── */}
-      <section className="section" style={{ background: 'var(--black)' }}>
+      <section className="section testimonials-section" style={{ background: 'var(--white)' }}>
         <div className="container">
           <div className="section-label" style={{ justifyContent: 'center' }}>Client Stories</div>
-          <h2 className="section-title text-center" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: 'var(--spacing-12)' }}>
             What Our Clients Say
           </h2>
           <div className="grid-3">
@@ -400,30 +487,114 @@ export default function Home() {
       </section>
 
       {/* ── FINAL CTA ─────────────────────────────────────── */}
-      <section style={{
-        padding: '7rem 0',
-        background: 'var(--dark-2)',
-        borderTop: '1px solid rgba(201,168,76,0.1)',
+      <section className="final-cta" style={{
+        padding: 'var(--spacing-24) 0',
+        background: 'var(--text-primary)',
+        borderTop: '1px solid rgba(217, 63, 48, 0.1)',
         textAlign: 'center',
       }}>
         <div className="container">
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: '1rem' }}>
-            Ready to Find Your<br />
-            <span className="text-gold">Dream Property?</span>
-          </h2>
-          <p style={{ color: 'var(--gray-mid)', maxWidth: '440px', margin: '0 auto 3rem' }}>
-            Our team of luxury real estate specialists are ready to guide you to the perfect property.
-          </p>
-          <Link to="/properties" className="btn btn-gold btn-lg">
-            Explore Listings <ArrowRight size={16} />
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="cta-title" style={{
+              fontFamily: 'var(--font-family)',
+              fontSize: 'clamp(2rem, 5vw, var(--text-5xl))',
+              color: 'var(--white)',
+              marginBottom: 'var(--spacing-4)',
+              fontWeight: 700,
+            }}>
+              Ready to Find Your<br />
+              <span className="text-gold">Dream Property?</span>
+            </h2>
+            <p className="cta-subtitle" style={{
+              color: 'rgba(255,255,255,0.7)',
+              maxWidth: '440px',
+              margin: '0 auto var(--spacing-10)',
+              fontSize: 'var(--text-lg)',
+            }}>
+              Our team of luxury real estate specialists are ready to guide you to the perfect property.
+            </p>
+            <Link to="/properties" className="btn btn-primary btn-lg" style={{ 
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-3)',
+            }}>
+              Explore Listings <ArrowRight size={18} />
+            </Link>
+          </motion.div>
         </div>
       </section>
+
+      <style>{`
+        @keyframes bounceDown {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        @media (max-width: 767px) {
+          .hero-search .search-bar {
+            flex-wrap: wrap !important;
+          }
+          .hero-search .search-select {
+            width: 100% !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            padding: var(--spacing-3) var(--spacing-4) !important;
+          }
+          .hero-search .search-input {
+            min-width: 100% !important;
+            padding: var(--spacing-3) var(--spacing-4) !important;
+          }
+          .hero-search .search-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            border-radius: 0 !important;
+          }
+          .type-tabs {
+            gap: var(--spacing-2) !important;
+          }
+          .type-tab {
+            font-size: var(--text-xs) !important;
+            padding: var(--spacing-1) var(--spacing-3) !important;
+          }
+          .section-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .banner-actions {
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .banner-actions .btn {
+            width: 100% !important;
+            max-width: 300px !important;
+          }
+        }
+
+        @media (max-width: 599px) {
+          .hero h1 {
+            font-size: var(--text-3xl) !important;
+          }
+          .hero-quick-suggestions {
+            gap: var(--spacing-2) !important;
+          }
+          .suggestion-chip {
+            font-size: var(--text-xs) !important;
+            padding: var(--spacing-1) var(--spacing-3) !important;
+          }
+          .final-cta {
+            padding: var(--spacing-16) 0 !important;
+          }
+        }
+      `}</style>
     </>
   )
 }
 
-// ── Demo data (used when API is offline) ─────────────────
+// ── Demo data ─────────────────────────────────────────────
 const DEMO_PROPERTIES = [
   {
     id: 1, slug: 'luxury-villa-diani-beach', title: 'Beachfront Villa – Diani',
