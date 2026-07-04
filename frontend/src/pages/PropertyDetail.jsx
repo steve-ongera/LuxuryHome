@@ -27,16 +27,19 @@ export default function PropertyDetail() {
   }, [slug])
 
   if (loading) return (
-    <div className="loader-wrap" style={{ minHeight: '100vh', paddingTop: '6rem' }}>
+    <div className="loader-wrap" style={{ minHeight: '100vh', paddingTop: 'calc(var(--nav-h) + var(--topbar-h) + var(--spacing-8))' }}>
       <div className="loader-ring" />
     </div>
   )
 
   if (!property) return (
-    <div style={{ paddingTop: '8rem', textAlign: 'center' }}>
-      <h2>Property Not Found</h2>
-      <Link to="/properties" className="btn btn-outline" style={{ marginTop: '1.5rem', display: 'inline-flex' }}>
-        ← Back to Listings
+    <div style={{ 
+      paddingTop: 'calc(var(--nav-h) + var(--topbar-h) + var(--spacing-12))', 
+      textAlign: 'center' 
+    }}>
+      <h2 style={{ marginBottom: 'var(--spacing-4)' }}>Property Not Found</h2>
+      <Link to="/properties" className="btn btn-outline" style={{ display: 'inline-flex' }}>
+        <ChevronLeft size={16} /> Back to Listings
       </Link>
     </div>
   )
@@ -78,64 +81,114 @@ export default function PropertyDetail() {
       </Helmet>
 
       {/* Breadcrumb */}
-      <div style={{ paddingTop: '6rem', background: 'var(--dark)', paddingBottom: '1.5rem' }}>
+      <div className="breadcrumb-section" style={{ 
+        paddingTop: 'calc(var(--nav-h) + var(--topbar-h) + var(--spacing-4))',
+        paddingBottom: 'var(--spacing-6)',
+        background: 'var(--text-primary)',
+      }}>
         <div className="container">
-          <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.78rem', color: 'var(--gray-muted)', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Link to="/" style={{ color: 'var(--gray-muted)' }}>Home</Link>
+          <div style={{ 
+            display: 'flex', 
+            gap: 'var(--spacing-2)', 
+            fontSize: 'var(--text-sm)', 
+            color: 'var(--text-muted)', 
+            alignItems: 'center', 
+            flexWrap: 'wrap' 
+          }}>
+            <Link to="/" style={{ color: 'var(--text-muted)', transition: 'color var(--duration-fast) var(--ease-smooth)' }}>
+              Home
+            </Link>
             <span>/</span>
-            <Link to="/properties" style={{ color: 'var(--gray-muted)' }}>Properties</Link>
+            <Link to="/properties" style={{ color: 'var(--text-muted)', transition: 'color var(--duration-fast) var(--ease-smooth)' }}>
+              Properties
+            </Link>
             <span>/</span>
-            <span style={{ color: 'var(--gold)' }}>{title}</span>
+            <span style={{ color: 'var(--primary-red)' }}>{title}</span>
           </div>
         </div>
       </div>
 
       {/* Gallery */}
-      <div style={{ background: 'var(--dark)', paddingBottom: '0' }}>
+      <section className="gallery-section" style={{ 
+        background: 'var(--text-primary)',
+        paddingBottom: 'var(--spacing-8)',
+      }}>
         <div className="container">
-          <div style={{
+          <div className="gallery-grid" style={{
             display: 'grid',
             gridTemplateColumns: allImages.length > 1 ? '2fr 1fr' : '1fr',
-            gap: '4px',
+            gap: 'var(--spacing-1)',
             maxHeight: '520px',
             overflow: 'hidden',
+            borderRadius: 'var(--radius-md)',
+            overflow: 'hidden',
           }}>
-            <div style={{ position: 'relative', overflow: 'hidden' }}>
+            <div className="gallery-main" style={{ position: 'relative', overflow: 'hidden' }}>
               <img
                 src={allImages[activeImage] || PLACEHOLDER}
                 alt={title}
-                style={{ width: '100%', height: '520px', objectFit: 'cover' }}
+                className="gallery-image"
+                style={{ 
+                  width: '100%', 
+                  height: '520px', 
+                  objectFit: 'cover',
+                  transition: 'transform var(--duration-slow) var(--ease-smooth)',
+                }}
               />
               {is_featured && (
-                <span style={{
-                  position: 'absolute', top: '1.25rem', left: '1.25rem',
-                  background: 'var(--gold)', color: 'var(--black)',
-                  padding: '0.3rem 0.8rem', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em',
+                <span className="badge badge-primary" style={{
+                  position: 'absolute',
+                  top: 'var(--spacing-5)',
+                  left: 'var(--spacing-5)',
+                  fontSize: 'var(--text-xs)',
+                  letterSpacing: '0.12em',
                 }}>
                   ★ FEATURED
                 </span>
               )}
             </div>
             {allImages.length > 1 && (
-              <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '4px', maxHeight: '520px' }}>
+              <div className="gallery-thumbs" style={{ 
+                display: 'grid', 
+                gridTemplateRows: '1fr 1fr', 
+                gap: 'var(--spacing-1)', 
+                maxHeight: '520px' 
+              }}>
                 {allImages.slice(1, 3).map((img, i) => (
                   <div
                     key={i}
-                    style={{ overflow: 'hidden', cursor: 'pointer', position: 'relative' }}
+                    className="gallery-thumb"
+                    style={{ 
+                      overflow: 'hidden', 
+                      cursor: 'pointer', 
+                      position: 'relative' 
+                    }}
                     onClick={() => setActiveImage(i + 1)}
                   >
                     <img
                       src={img}
                       alt={`Gallery ${i + 1}`}
-                      style={{ width: '100%', height: '258px', objectFit: 'cover', transition: 'transform 0.4s' }}
-                      onMouseEnter={(e) => e.target.style.transform = 'scale(1.04)'}
-                      onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                      style={{ 
+                        width: '100%', 
+                        height: '258px', 
+                        objectFit: 'cover', 
+                        transition: 'transform var(--duration-slow) var(--ease-smooth)',
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                     />
                     {i === 1 && allImages.length > 3 && (
-                      <div style={{
-                        position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--warm-white)',
+                      <div className="gallery-more-overlay" style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'var(--font-family)',
+                        fontSize: 'var(--text-2xl)',
+                        color: 'var(--white)',
+                        fontWeight: 600,
                       }}>
                         +{allImages.length - 3} more
                       </div>
@@ -146,52 +199,104 @@ export default function PropertyDetail() {
             )}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Main Content */}
-      <div className="container" style={{ padding: '3rem clamp(1rem,4vw,2.5rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '3rem', alignItems: 'start' }}>
+      <div className="container" style={{ 
+        padding: 'var(--spacing-12) clamp(var(--spacing-4), 4vw, var(--spacing-10))' 
+      }}>
+        <div className="detail-grid" style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 360px', 
+          gap: 'var(--spacing-12)', 
+          alignItems: 'start' 
+        }}>
 
           {/* Left: Details */}
-          <div>
+          <div className="detail-content">
             {/* Title & Price */}
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                <span className="badge badge-gold">{status === 'sale' ? 'For Sale' : 'For Rent'}</span>
-                <span className="badge badge-dark">{property_type?.replace('_', ' ').toUpperCase()}</span>
+            <div className="detail-header" style={{ marginBottom: 'var(--spacing-8)' }}>
+              <div style={{ 
+                display: 'flex', 
+                gap: 'var(--spacing-3)', 
+                marginBottom: 'var(--spacing-4)', 
+                flexWrap: 'wrap' 
+              }}>
+                <span className="badge badge-primary">
+                  {status === 'sale' ? 'For Sale' : 'For Rent'}
+                </span>
+                <span className="badge badge-secondary">
+                  {property_type?.replace('_', ' ').toUpperCase()}
+                </span>
               </div>
-              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem,4vw,2.8rem)', marginBottom: '0.75rem' }}>
+              <h1 className="detail-title" style={{ 
+                fontFamily: 'var(--font-family)',
+                fontSize: 'clamp(1.8rem, 4vw, var(--text-4xl))',
+                marginBottom: 'var(--spacing-3)',
+                fontWeight: 700,
+              }}>
                 {title}
               </h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--gray-mid)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
-                <MapPin size={14} color="var(--gold)" />
+              <div className="detail-location" style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 'var(--spacing-2)', 
+                color: 'var(--text-secondary)', 
+                fontSize: 'var(--text-sm)',
+                marginBottom: 'var(--spacing-5)',
+              }}>
+                <MapPin size={14} color="var(--primary-red)" />
                 {exact_location || `${city}, ${country}`}
               </div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem,4vw,3rem)', color: 'var(--gold)', fontWeight: 400 }}>
+              <div className="detail-price" style={{ 
+                fontFamily: 'var(--font-family)',
+                fontSize: 'clamp(2rem, 4vw, var(--text-4xl))',
+                color: 'var(--primary-red)',
+                fontWeight: 700,
+              }}>
                 {formatPrice(price)}
               </div>
             </div>
 
             {/* Quick Stats */}
-            <div style={{
+            <div className="detail-stats" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
               gap: '1px',
-              marginBottom: '2.5rem',
-              background: 'rgba(255,255,255,0.05)',
+              marginBottom: 'var(--spacing-10)',
+              background: 'var(--border)',
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
             }}>
               {[
                 { Icon: BedDouble, value: bedrooms ?? '—', label: 'Bedrooms' },
-                { Icon: Bath,      value: bathrooms ?? '—', label: 'Bathrooms' },
-                { Icon: Maximize,  value: size_sqft ? `${Number(size_sqft).toLocaleString()} ft²` : size_acres ? `${size_acres} acres` : '—', label: 'Size' },
-                { Icon: Calendar,  value: created_at ? new Date(created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '—', label: 'Listed' },
+                { Icon: Bath, value: bathrooms ?? '—', label: 'Bathrooms' },
+                { Icon: Maximize, value: size_sqft ? `${Number(size_sqft).toLocaleString()} ft²` : size_acres ? `${size_acres} acres` : '—', label: 'Size' },
+                { Icon: Calendar, value: created_at ? new Date(created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '—', label: 'Listed' },
               ].map(({ Icon, value, label }) => (
-                <div key={label} style={{ background: 'var(--dark-2)', padding: '1.25rem', textAlign: 'center' }}>
-                  <Icon size={18} color="var(--gold)" style={{ margin: '0 auto 0.5rem' }} />
-                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', color: 'var(--warm-white)', marginBottom: '0.2rem' }}>
+                <div key={label} className="stat-item" style={{ 
+                  background: 'var(--white)',
+                  padding: 'var(--spacing-5)',
+                  textAlign: 'center',
+                  transition: 'background var(--duration-fast) var(--ease-smooth)',
+                }}>
+                  <Icon size={18} color="var(--primary-red)" style={{ margin: '0 auto var(--spacing-2)' }} />
+                  <div className="stat-value" style={{ 
+                    fontFamily: 'var(--font-family)',
+                    fontSize: 'var(--text-xl)',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                    marginBottom: 'var(--spacing-1)',
+                  }}>
                     {value}
                   </div>
-                  <div style={{ fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gray-muted)' }}>
+                  <div className="stat-label" style={{ 
+                    fontSize: 'var(--text-xs)',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--text-muted)',
+                    fontWeight: 500,
+                  }}>
                     {label}
                   </div>
                 </div>
@@ -199,30 +304,62 @@ export default function PropertyDetail() {
             </div>
 
             {/* Description */}
-            <div style={{ marginBottom: '2.5rem' }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', marginBottom: '1rem' }}>
+            <div className="detail-description" style={{ marginBottom: 'var(--spacing-10)' }}>
+              <h3 className="detail-section-title" style={{ 
+                fontFamily: 'var(--font-family)',
+                fontSize: 'var(--text-2xl)',
+                fontWeight: 600,
+                marginBottom: 'var(--spacing-4)',
+              }}>
                 About This Property
               </h3>
               <div className="gold-divider" />
-              <p style={{ color: 'var(--gray-mid)', lineHeight: 1.9, whiteSpace: 'pre-line' }}>
+              <p className="detail-description-text" style={{ 
+                color: 'var(--text-secondary)',
+                lineHeight: 1.9,
+                whiteSpace: 'pre-line',
+                fontSize: 'var(--text-base)',
+                marginTop: 'var(--spacing-4)',
+              }}>
                 {description || 'A truly exceptional luxury property available exclusively through LuxuryHome. Contact us for full details and a private viewing.'}
               </p>
             </div>
 
             {/* Amenities */}
             {amenities.length > 0 && (
-              <div style={{ marginBottom: '2.5rem' }}>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', marginBottom: '1rem' }}>
+              <div className="detail-amenities" style={{ marginBottom: 'var(--spacing-10)' }}>
+                <h3 className="detail-section-title" style={{ 
+                  fontFamily: 'var(--font-family)',
+                  fontSize: 'var(--text-2xl)',
+                  fontWeight: 600,
+                  marginBottom: 'var(--spacing-4)',
+                }}>
                   Amenities & Features
                 </h3>
                 <div className="gold-divider" />
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.6rem', marginTop: '1rem' }}>
+                <div className="amenities-grid" style={{ 
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  gap: 'var(--spacing-2)',
+                  marginTop: 'var(--spacing-4)',
+                }}>
                   {amenities.map((a) => (
                     <div
                       key={a.id ?? a.name ?? a}
-                      style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', fontSize: '0.85rem', color: 'var(--gray-mid)' }}
+                      className="amenity-item"
+                      style={{ 
+                        display: 'flex',
+                        gap: 'var(--spacing-2)',
+                        alignItems: 'center',
+                        fontSize: 'var(--text-sm)',
+                        color: 'var(--text-secondary)',
+                        padding: 'var(--spacing-2) var(--spacing-3)',
+                        background: 'var(--gray-50)',
+                        borderRadius: 'var(--radius-base)',
+                        transition: 'all var(--duration-fast) var(--ease-smooth)',
+                      }}
                     >
-                      <CheckCircle size={14} color="var(--gold)" />
+                      <CheckCircle size={14} color="var(--primary-red)" />
                       {typeof a === 'object' ? a.name : a}
                     </div>
                   ))}
@@ -232,34 +369,63 @@ export default function PropertyDetail() {
 
             {/* Agent Info */}
             {agent && (
-              <div style={{
-                padding: '1.5rem',
-                background: 'var(--dark-2)',
-                border: '1px solid rgba(255,255,255,0.06)',
+              <div className="detail-agent" style={{
+                padding: 'var(--spacing-6)',
+                background: 'var(--gray-50)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-md)',
                 display: 'flex',
-                gap: '1.25rem',
+                gap: 'var(--spacing-5)',
                 alignItems: 'center',
                 flexWrap: 'wrap',
               }}>
                 <img
                   src={agent.avatar || `https://i.pravatar.cc/60?img=${agent.id}`}
                   alt={agent.full_name || agent.name}
-                  style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--gold)' }}
+                  style={{ 
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: 'var(--radius-full)',
+                    objectFit: 'cover',
+                    border: '2px solid var(--primary-red)',
+                  }}
                 />
-                <div>
-                  <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.15em', color: 'var(--gold)', marginBottom: '0.25rem' }}>
+                <div className="agent-info">
+                  <div className="agent-label" style={{ 
+                    fontSize: 'var(--text-xs)',
+                    fontWeight: 600,
+                    letterSpacing: '0.15em',
+                    color: 'var(--primary-red)',
+                    marginBottom: 'var(--spacing-1)',
+                    textTransform: 'uppercase',
+                  }}>
                     LISTED BY
                   </div>
-                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--warm-white)' }}>
+                  <div className="agent-name" style={{ 
+                    fontFamily: 'var(--font-family)',
+                    fontSize: 'var(--text-lg)',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                  }}>
                     {agent.full_name || agent.name}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-muted)' }}>
+                  <div className="agent-email" style={{ 
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--text-secondary)',
+                  }}>
                     {agent.email}
                   </div>
                 </div>
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.75rem' }}>
-                  <a href={`tel:${agent.phone}`} className="btn btn-ghost btn-sm">Call</a>
-                  <a href={`https://wa.me/${agent.phone}`} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
+                <div className="agent-actions" style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--spacing-3)' }}>
+                  <a href={`tel:${agent.phone}`} className="btn btn-ghost btn-sm">
+                    Call
+                  </a>
+                  <a 
+                    href={`https://wa.me/${agent.phone}`} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="btn btn-outline btn-sm"
+                  >
                     WhatsApp
                   </a>
                 </div>
@@ -268,52 +434,171 @@ export default function PropertyDetail() {
           </div>
 
           {/* Right: Quote + Actions */}
-          <div style={{ position: 'sticky', top: '6rem' }}>
+          <aside className="detail-sidebar" style={{ position: 'sticky', top: 'calc(var(--nav-h) + var(--topbar-h) + var(--spacing-4))' }}>
             {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <div className="action-buttons" style={{ 
+              display: 'flex',
+              gap: 'var(--spacing-2)',
+              marginBottom: 'var(--spacing-6)',
+            }}>
               <button
+                className="action-btn"
                 style={{
-                  flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem',
+                  flex: 1,
+                  background: 'var(--gray-50)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-secondary)',
+                  padding: 'var(--spacing-2)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 'var(--spacing-2)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  borderRadius: 'var(--radius-base)',
+                  transition: 'all var(--duration-fast) var(--ease-smooth)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--primary-red)'
+                  e.currentTarget.style.color = 'var(--primary-red)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 <Heart size={14} /> Save
               </button>
               <button
+                className="action-btn"
                 style={{
-                  flex: 1, background: 'var(--dark-2)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'var(--gray-mid)', padding: '0.6rem', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.75rem',
+                  flex: 1,
+                  background: 'var(--gray-50)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-secondary)',
+                  padding: 'var(--spacing-2)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 'var(--spacing-2)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  borderRadius: 'var(--radius-base)',
+                  transition: 'all var(--duration-fast) var(--ease-smooth)',
                 }}
                 onClick={() => navigator.share?.({ title, url: window.location.href })}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--primary-red)'
+                  e.currentTarget.style.color = 'var(--primary-red)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
+                }}
               >
                 <Share2 size={14} /> Share
               </button>
             </div>
 
             {/* Quote Form Card */}
-            <div style={{
-              background: 'var(--dark-2)',
-              border: '1px solid rgba(201,168,76,0.2)',
-              padding: '2rem',
+            <div className="quote-card" style={{
+              background: 'var(--white)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--spacing-6)',
+              boxShadow: 'var(--shadow-card)',
             }}>
-              <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <MessageSquare size={16} color="var(--gold)" />
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem' }}>
+              <div style={{ 
+                display: 'flex', 
+                gap: 'var(--spacing-2)', 
+                alignItems: 'center', 
+                marginBottom: 'var(--spacing-4)' 
+              }}>
+                <MessageSquare size={16} color="var(--primary-red)" />
+                <h3 style={{ 
+                  fontFamily: 'var(--font-family)',
+                  fontSize: 'var(--text-lg)',
+                  fontWeight: 600,
+                }}>
                   Request Quotation
                 </h3>
               </div>
               <QuoteForm property={property} />
             </div>
-          </div>
+          </aside>
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
-          [style*="grid-template-columns: 1fr 360px"] { grid-template-columns: 1fr !important; }
-          [style*="position: sticky"] { position: static !important; }
+        @media (max-width: 1023px) {
+          .detail-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .detail-sidebar {
+            position: static !important;
+          }
+          .gallery-grid {
+            max-height: none !important;
+          }
+          .gallery-image {
+            height: 400px !important;
+          }
+          .gallery-thumbs img {
+            height: 200px !important;
+          }
+        }
+
+        @media (max-width: 599px) {
+          .gallery-grid {
+            grid-template-columns: 1fr !important;
+            gap: var(--spacing-2) !important;
+          }
+          .gallery-image {
+            height: 300px !important;
+          }
+          .gallery-thumbs {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: 1fr !important;
+            max-height: none !important;
+          }
+          .gallery-thumbs img {
+            height: 150px !important;
+          }
+          .detail-stats {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .detail-agent {
+            flex-direction: column !important;
+            text-align: center !important;
+          }
+          .agent-actions {
+            margin-left: 0 !important;
+          }
+          .breadcrumb-section {
+            padding-top: calc(var(--nav-h) + var(--spacing-4)) !important;
+          }
+        }
+
+        @media (max-width: 374px) {
+          .detail-stats {
+            grid-template-columns: 1fr !important;
+          }
+          .action-buttons {
+            flex-direction: column !important;
+          }
+        }
+
+        /* Hover states for stat items */
+        .stat-item:hover {
+          background: var(--gray-50) !important;
+        }
+        
+        .amenity-item:hover {
+          background: var(--red-tint) !important;
+          transform: translateX(4px);
         }
       `}</style>
     </>
