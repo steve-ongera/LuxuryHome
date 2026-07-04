@@ -1972,3 +1972,117 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     animation: none;
   }
 }
+
+/* Ensure proper z-index stacking for navigation */
+.topbar {
+  z-index: 1001 !important;
+}
+
+.navbar {
+  z-index: 1000 !important;
+}
+
+.navbar-toggle {
+  z-index: 1002 !important;
+  position: relative !important;
+}
+
+.drawer-overlay {
+  z-index: 2000 !important;
+}
+
+.drawer {
+  z-index: 2001 !important;
+}
+
+/* Profile dropdown in navbar */
+.navbar .card {
+  z-index: 2000 !important;
+}
+
+/* Ensure page content doesn't overlap with navbar */
+.page-content {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(var(--nav-h) + var(--topbar-h));
+}
+
+@media (max-width: 767px) {
+  .page-content {
+    padding-top: var(--nav-h);
+  }
+}
+
+
+/* Property Card Enhancements */
+.property-card-link {
+  display: block;
+  text-decoration: none;
+}
+
+.property-card-link:hover {
+  text-decoration: none;
+}
+
+.card-image .favorite-btn {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-image .favorite-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.card-image .favorite-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.card-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.card-meta .meta-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.property-type {
+  display: inline-block;
+  background: var(--red-tint);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+}
+
+/* Status badge position fix */
+.property-card .card-badge {
+  position: absolute;
+  top: var(--spacing-3);
+  left: var(--spacing-3);
+}
+
+/* Featured badge position fix */
+.property-card .featured-badge {
+  position: absolute;
+  top: var(--spacing-3);
+  right: calc(3.5rem + var(--spacing-2));
+}
+
+/* Mobile optimizations */
+@media (max-width: 599px) {
+  .card-image .favorite-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .card-image .favorite-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .property-type {
+    font-size: var(--text-xs);
+  }
+}

@@ -62,7 +62,7 @@ export default function Navbar() {
   return (
     <>
       {/* ── Top Utility Bar ──────────────────────────────── */}
-      <div className="topbar">
+      <div className="topbar" style={{ zIndex: 1001 }}>
         <div className="container">
           <div className="topbar-inner">
             <ul className="topbar-links">
@@ -97,7 +97,7 @@ export default function Navbar() {
       </div>
 
       {/* ── Navbar Bar ───────────────────────────────────── */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} style={{ zIndex: 1000 }}>
         <div className="container">
           <div className="navbar-inner">
 
@@ -171,7 +171,7 @@ export default function Navbar() {
                         minWidth: '200px',
                         borderRadius: 'var(--radius-md)',
                         overflow: 'hidden',
-                        zIndex: 'var(--z-dropdown)',
+                        zIndex: 2000,
                         boxShadow: 'var(--shadow-xl)',
                         border: '1px solid var(--border)',
                       }}>
@@ -221,6 +221,7 @@ export default function Navbar() {
                 onClick={() => setDrawerOpen(true)}
                 className="navbar-toggle"
                 aria-label="Open menu"
+                style={{ zIndex: 1002, position: 'relative' }}
               >
                 <Menu size={20} />
               </button>
@@ -234,6 +235,7 @@ export default function Navbar() {
         className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
         onClick={() => setDrawerOpen(false)}
         aria-hidden="true"
+        style={{ zIndex: 2000 }}
       />
 
       {/* ── Drawer Sidebar ────────────────────────────────── */}
@@ -242,6 +244,7 @@ export default function Navbar() {
         role="dialog" 
         aria-modal="true" 
         aria-label="Navigation menu"
+        style={{ zIndex: 2001 }}
       >
 
         {/* Drawer Header */}
@@ -419,6 +422,46 @@ export default function Navbar() {
           </p>
         </div>
       </aside>
+
+      <style>{`
+        /* Ensure proper z-index stacking */
+        .topbar {
+          z-index: 1001 !important;
+        }
+        
+        .navbar {
+          z-index: 1000 !important;
+        }
+        
+        .drawer-overlay {
+          z-index: 2000 !important;
+        }
+        
+        .drawer {
+          z-index: 2001 !important;
+        }
+        
+        /* Profile dropdown */
+        .card {
+          z-index: 2000 !important;
+        }
+        
+        /* Hamburger button */
+        .navbar-toggle {
+          z-index: 1002 !important;
+          position: relative !important;
+        }
+
+        @media (min-width: 768px) {
+          .hamburger-btn { display: none !important; }
+          .desktop-auth-buttons { display: flex !important; }
+        }
+        @media (max-width: 767px) {
+          .desktop-auth-buttons { display: none !important; }
+          .hamburger-btn { display: flex !important; }
+          .navbar-links { display: none !important; }
+        }
+      `}</style>
     </>
   )
 }

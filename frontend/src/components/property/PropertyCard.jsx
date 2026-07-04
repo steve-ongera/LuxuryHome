@@ -16,10 +16,10 @@ const formatPrice = (price, currency = 'KES') => {
 }
 
 const STATUS_COLORS = {
-  sale:   { bg: 'var(--gold)', color: 'var(--black)', label: 'For Sale' },
-  rent:   { bg: '#4C9EE8', color: '#fff', label: 'For Rent' },
-  sold:   { bg: '#666', color: '#fff', label: 'Sold' },
-  leased: { bg: '#888', color: '#fff', label: 'Leased' },
+  sale:   { bg: 'var(--primary-red)', color: 'var(--white)', label: 'For Sale' },
+  rent:   { bg: '#2563EB', color: 'var(--white)', label: 'For Rent' },
+  sold:   { bg: 'var(--text-muted)', color: 'var(--white)', label: 'Sold' },
+  leased: { bg: 'var(--gray-600)', color: 'var(--white)', label: 'Leased' },
 }
 
 export default function PropertyCard({ property, compact = false }) {
@@ -58,8 +58,8 @@ export default function PropertyCard({ property, compact = false }) {
   }
 
   return (
-    <Link to={`/properties/${slug}`} style={{ display: 'block' }}>
-      <article className="card property-card">
+    <Link to={`/properties/${slug}`} className="property-card-link" style={{ display: 'block' }}>
+      <article className="property-card">
         {/* Image */}
         <div className="card-image">
           <img
@@ -71,27 +71,33 @@ export default function PropertyCard({ property, compact = false }) {
 
           {/* Status Badge */}
           <span
-            className="card-badge"
-            style={{ background: statusConfig.bg, color: statusConfig.color }}
+            className="badge badge-primary"
+            style={{ 
+              background: statusConfig.bg, 
+              color: statusConfig.color,
+              border: 'none',
+            }}
           >
             {statusConfig.label}
           </span>
 
-          {/* Featured */}
+          {/* Featured Badge */}
           {is_featured && (
             <span
+              className="badge"
               style={{
                 position: 'absolute',
-                top: '1rem',
-                right: '3.5rem',
-                background: 'var(--dark)',
-                color: 'var(--gold)',
-                border: '1px solid var(--gold)',
-                padding: '0.25rem 0.6rem',
-                fontSize: '0.6rem',
-                fontWeight: 600,
+                top: 'var(--spacing-3)',
+                right: 'calc(3.5rem + var(--spacing-2))',
+                background: 'var(--text-primary)',
+                color: 'var(--primary-red)',
+                border: '1px solid var(--primary-red)',
+                padding: 'var(--spacing-1) var(--spacing-2)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
+                borderRadius: 'var(--radius-sm)',
               }}
             >
               ★ Featured
@@ -102,60 +108,95 @@ export default function PropertyCard({ property, compact = false }) {
           <button
             onClick={handleFavorite}
             disabled={favoriteLoading}
+            className="favorite-btn"
+            aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
             style={{
               position: 'absolute',
-              top: '0.75rem',
-              right: '0.75rem',
+              top: 'var(--spacing-3)',
+              right: 'var(--spacing-3)',
               width: '36px',
               height: '36px',
-              background: 'rgba(10,10,10,0.7)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: favorited ? 'var(--gold)' : 'var(--gray-mid)',
+              background: 'rgba(0, 0, 0, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: favorited ? 'var(--primary-red)' : 'var(--text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               backdropFilter: 'blur(8px)',
-              transition: 'all 0.3s',
+              WebkitBackdropFilter: 'blur(8px)',
+              borderRadius: 'var(--radius-full)',
+              transition: 'all var(--duration-fast) var(--ease-smooth)',
+              padding: 0,
+              zIndex: 'var(--z-above)',
             }}
-            aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+              e.currentTarget.style.transform = 'scale(1.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
           >
-            <Heart size={15} fill={favorited ? 'currentColor' : 'none'} />
+            <Heart 
+              size={16} 
+              fill={favorited ? 'currentColor' : 'none'} 
+              style={{ transition: 'all var(--duration-fast) var(--ease-smooth)' }}
+            />
           </button>
         </div>
 
         {/* Body */}
         <div className="card-body">
-          {/* Type label */}
-          <div style={{
-            fontSize: '0.65rem',
+          {/* Property Type */}
+          <div className="property-type" style={{
+            fontSize: 'var(--text-xs)',
             fontWeight: 600,
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
-            color: 'var(--gold)',
-            marginBottom: '0.5rem',
+            color: 'var(--primary-red)',
+            marginBottom: 'var(--spacing-2)',
           }}>
             {property_type?.replace('_', ' ')}
           </div>
 
+          {/* Price */}
           <div className="card-price">{formatPrice(price, currency)}</div>
+          
+          {/* Title */}
           <h3 className="card-title">{title}</h3>
 
-          <div className="card-location flex gap-1" style={{ alignItems: 'center' }}>
-            <MapPin size={12} />
-            {city}{country ? `, ${country}` : ''}
+          {/* Location */}
+          <div className="card-location flex" style={{ 
+            alignItems: 'center', 
+            gap: 'var(--spacing-1)',
+            marginBottom: 'var(--spacing-3)',
+          }}>
+            <MapPin size={14} className="location-icon" style={{ color: 'var(--text-muted)' }} />
+            <span>{city}{country ? `, ${country}` : ''}</span>
           </div>
 
+          {/* Meta Information */}
           {!compact && (
             <div className="card-meta">
               {bedrooms != null && (
-                <span><BedDouble size={13} /> {bedrooms} Beds</span>
+                <span className="meta-item">
+                  <BedDouble size={14} className="meta-icon" />
+                  {bedrooms} Beds
+                </span>
               )}
               {bathrooms != null && (
-                <span><Bath size={13} /> {bathrooms} Baths</span>
+                <span className="meta-item">
+                  <Bath size={14} className="meta-icon" />
+                  {bathrooms} Baths
+                </span>
               )}
               {size_sqft && (
-                <span><Maximize size={13} /> {Number(size_sqft).toLocaleString()} ft²</span>
+                <span className="meta-item">
+                  <Maximize size={14} className="meta-icon" />
+                  {Number(size_sqft).toLocaleString()} ft²
+                </span>
               )}
             </div>
           )}
