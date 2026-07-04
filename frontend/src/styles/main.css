@@ -1021,6 +1021,45 @@ input[type="range"]::-moz-range-thumb {
 .hidden       { display: none; }
 .w-full       { width: 100%; }
 
+/* ── App Shell / Page Offset ──────────────────────────────
+   Navbar + topbar are position:fixed, so page content needs
+   matching top padding. This lives here (not inline in
+   Layout.jsx) because the required offset changes at the same
+   breakpoint where the topbar hides on mobile — a single
+   hardcoded JS value can't track both states.
+   ────────────────────────────────────────────────────────── */
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh; /* accounts for mobile browser chrome */
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  padding-top: calc(var(--nav-h) + var(--topbar-h));
+}
+
+/* Below 767px the topbar is hidden and .navbar sits at top:0
+   (see the .navbar { top } override in the 767px query above),
+   so the reserved space shrinks to just the navbar height. */
+@media (max-width: 767px) {
+  .page-content { padding-top: var(--nav-h); }
+}
+
+/* Full-bleed hero pages: the hero already offsets its own inner
+   content via .hero-content's padding-top, and paints its own
+   background behind the fixed nav — so pull the wrapper up to
+   cancel the .page-content padding and let it sit flush under
+   the nav. Add this class to the outermost element of any page
+   whose first section is a .hero. */
+.page-flush {
+  margin-top: calc(-1 * (var(--nav-h) + var(--topbar-h)));
+}
+@media (max-width: 767px) {
+  .page-flush { margin-top: calc(-1 * var(--nav-h)); }
+}
+
 /* ── Page Transitions ────────────────────────────────────── */
 .page-enter { opacity: 0; transform: translateY(16px); }
 .page-enter-active {

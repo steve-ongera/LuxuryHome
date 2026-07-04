@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 
 export default function Layout() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-shell">
       <Navbar />
-      <main style={{ flex: 1 }}>
+      <main className="page-content">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
